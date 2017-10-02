@@ -19,31 +19,51 @@ string[,] mainPuzzles = new string[,]{
 	{("Box021"),("Box020")},
 	{("Box019"),("Box018")},
 };
+
+//puzzle1 Nav, Input & Solutions
 string[,] puzzle1Nav = new string[,]{
 	{("Box028"), ("Box027"), ("Box026")},
 	{("Box031"), ("Box030"), ("Box029")},
 	{("Box034"), ("Box033"), ("Box032")},
 };
 
+string[,] puzzle1Input = new string[,]{
+	{("1"), ("4"), ("7")},
+	{("2"), ("5"), ("8")},
+	{("3"), ("6"), ("9")},
+};
+public List<string> puzzle1Solutions;
+
+//Puzzle2 Nav
+public List<string> puzzle2Nav;
+int[] slotValues = new int[]{
+	1,1,1,1
+};
+
+//Puzzle3 Nav
+public List<string> puzzle3Nav;
+
+//Puzzle4 Nav
 string[,] puzzle4Nav = new string[,]{
 	{("Box038"),("Box040")},
 	{("Box039"),("Box041")},
 };
-/*Vector3[,] puzzle1Nav = new Vector3[,]{
-			{new Vector3(0.95f,1.65f,-1.5f),new Vector3(0.95f,1.60f,-1.5f),new Vector3(0.95f,1.55f,-1.5f)},
-			{new Vector3(0.9f,1.65f,-1.5f),new Vector3(0.9f,1.60f,-1.5f),new Vector3(0.9f,1.55f,-1.5f)},
-			{new Vector3(0.85f,1.65f,-1.5f),new Vector3(0.85f,1.60f,-1.5f),new Vector3(0.85f,1.55f,-1.5f)},
-};*/
 
-public List<string> puzzle2Nav;
+string puzzle1Code;
+string puzzle1Solution;
 
-public List<string> puzzle3Nav;
-
+//puzzlelocks
 bool subPuzzleLock;
 bool puzzle1Lock;
 bool puzzle2Lock;
 bool puzzle3Lock;
 bool puzzle4Lock;
+
+//puzzleSolved
+bool puzzle1Solved;
+bool puzzle2Solved;
+bool puzzle3Solved;
+bool puzzle4Solved;
 
 	void Start(){
 
@@ -63,21 +83,29 @@ bool puzzle4Lock;
 		puzzle3Nav.Add("Cylinder013");
 		puzzle3Nav.Add("Cylinder014");
 
-		
+		//Puzzle 1 solutions randomizer
+		puzzle1Solutions = new List<string>();
+		puzzle1Solutions.Add("3972");
+		puzzle1Solutions.Add("5684");
+		puzzle1Solutions.Add("1834");
+		puzzle1Solutions.Add("8471");
+
+		puzzle1Solution = puzzle1Solutions[Random.Range(0,3)];
+		Debug.Log("Puzzle1Solution = " + puzzle1Solution);
+
 		//General navigation
 		selectionX = 0;
 		selectionY = 0;
-		//Puzzle 1 nav
 
-		//Puzzle 2 nav
-		puzzleSelX2 = 0;
-		puzzleSelY2 = 0;
-		//Puzzle 3 nav
-
-		//Puzzle 4 nav
-
-
+		//initial lock
 		subPuzzleLock = false;
+
+		//puzzle startphase
+		puzzle1Solved = false;
+		puzzle2Solved = false;
+		puzzle3Solved = false;
+		puzzle4Solved = false;
+
 		activeObj = GameObject.Find(mainPuzzles[selectionX, selectionY]);
 		pointerNav.transform.position = activeObj.transform.position;
 	}
@@ -130,6 +158,21 @@ bool puzzle4Lock;
 				
 				Renderer rend = activeObj.GetComponent<Renderer>();
 				rend.material.SetColor("_Color", Color.red);
+				puzzle1Code += puzzle1Input[puzzleSelX1,puzzleSelY1];
+				Debug.Log(puzzle1Code);
+				if(puzzle1Code.Length == 4){
+					if(puzzle1Code == puzzle1Solution){
+						Debug.Log("Puzzle solved!");
+						puzzle1Solved = true;
+						subPuzzleLock = false;
+						puzzle1Lock = false;
+						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
+						pointerNav.transform.position = activeObj.transform.position;
+					} else {
+						Debug.Log("Wrong code");
+						puzzle1Code = "";
+					}
+				}
 			}
 		} else if (subPuzzleLock == true && puzzle2Lock == true){
 
@@ -161,12 +204,31 @@ bool puzzle4Lock;
 			}
 			if(Input.GetKeyDown(KeyCode.Space) && puzzle3Nav.IndexOf(puzzle3Nav[puzzleSelX3]) != 4){
 				activeObj.transform.Rotate(Vector3.forward, 20);
-					
+				if(slotValues[puzzleSelX3] < 9){
+					slotValues[puzzleSelX3] += 1;
+					Debug.Log(slotValues[puzzleSelX3] + ": value for slot " + puzzleSelX3);
+				} else {
+					Debug.Log("Back to one");
+					slotValues[puzzleSelX3] = 1;
+				}
 
 			} else if (Input.GetKeyDown(KeyCode.Space)){
 				if(activeObj.transform.rotation.eulerAngles.x == 300){
 					activeObj.transform.Rotate(Vector3.right, 120);
-					
+					string p3Output = "";
+					for(int i = 0;slotValues.Length > i; i++){
+						p3Output = p3Output + slotValues[i].ToString();
+					}
+					if(p3Output == "1234"){
+						Debug.Log("Puzzled solved!");
+						puzzle3Solved = true;
+						subPuzzleLock = false;
+						puzzle3Lock = false;
+						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
+						pointerNav.transform.position = activeObj.transform.position;
+					} else {
+						Debug.Log("Wrong input.");
+					}
 				} else {
 					activeObj.transform.Rotate(Vector3.right, -120);
 		
@@ -190,12 +252,23 @@ bool puzzle4Lock;
 				activeObj = GameObject.Find(puzzle4Nav[puzzleSelX4,puzzleSelY4]);
 				pointerNav.transform.position = activeObj.transform.position;
 			}
+
+			if(Input.GetKeyDown(KeyCode.Space)){
+				
+				if(activeObj.transform.rotation.eulerAngles.x == 300){
+					activeObj.transform.Rotate(Vector3.right, 120);
+					
+				} else {
+					activeObj.transform.Rotate(Vector3.right, -120);
+		
+				}
+			}
 		}
 
 
 		if(Input.GetKeyDown(KeyCode.Space) && subPuzzleLock == false){
 			
-			if(selectionX == 0 && selectionY == 0){
+			if(selectionX == 0 && selectionY == 0 && puzzle1Solved == false){
 				subPuzzleLock = true;
 				puzzle1Lock = true;
 				activeObj = GameObject.Find(puzzle1Nav[puzzleSelX1,puzzleSelY1]);
@@ -206,7 +279,7 @@ bool puzzle4Lock;
 				Debug.Log("Puzzle2");
 				activeObj = GameObject.Find(puzzle2Nav[puzzleSelX2]);
 				pointerNav.transform.position = activeObj.transform.position;
-			} else if (selectionX == 1 && selectionY == 0) {
+			} else if (selectionX == 1 && selectionY == 0 && puzzle3Solved == false) {
 				subPuzzleLock = true;
 				puzzle3Lock = true;
 				Debug.Log("Puzzle3");
