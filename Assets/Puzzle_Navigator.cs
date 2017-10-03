@@ -1,17 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Puzzle_Navigator : MonoBehaviour {
 
 
-//Primary navigation
-
-//Sub navigation
-
 public GameObject pointerNav;
 
 public GameObject activeObj;
+public GameObject pBarP4;
+
+public GameObject challengeComplete;
+public Sprite pbar0, pbar1, pbar2, pbar3, pbar4, pbar5;
 
 int selectionX, puzzleSelX1, puzzleSelX2, puzzleSelX3, puzzleSelX4;
 int selectionY, puzzleSelY1, puzzleSelY2, puzzleSelY3, puzzleSelY4;
@@ -19,6 +20,10 @@ string[,] mainPuzzles = new string[,]{
 	{("Box021"),("Box020")},
 	{("Box019"),("Box018")},
 };
+
+//Numberpad display
+GameObject numberDisplay;
+Text displayNumber;
 
 //puzzle1 Nav, Input & Solutions
 string[,] puzzle1Nav = new string[,]{
@@ -34,6 +39,9 @@ string[,] puzzle1Input = new string[,]{
 };
 public List<string> puzzle1Solutions;
 
+string puzzle1Code;
+string puzzle1Solution;
+
 //Puzzle2 Nav
 public List<string> puzzle2Nav;
 int[] slotValues = new int[]{
@@ -42,15 +50,24 @@ int[] slotValues = new int[]{
 
 //Puzzle3 Nav
 public List<string> puzzle3Nav;
+int[] leverValues = new int[]{
+	0,0,0,0,0
+};
 
-//Puzzle4 Nav
+//Puzzle4 Nav, Input & solution
 string[,] puzzle4Nav = new string[,]{
 	{("Box038"),("Box040")},
 	{("Box039"),("Box041")},
 };
 
-string puzzle1Code;
-string puzzle1Solution;
+string[,] puzzle4Input = new string [,]{
+	{("A"),("C")},
+	{("B"),("D")},
+};
+
+string puzzle4Progress;
+string puzzle4Solution;
+
 
 //puzzlelocks
 bool subPuzzleLock;
@@ -68,6 +85,7 @@ bool puzzle4Solved;
 	void Start(){
 
 		pointerNav = GameObject.Find("Capsule");
+		pBarP4 = GameObject.Find("ProgressSprite");
 		
 		puzzle2Nav = new List<string>();
 		puzzle2Nav.Add("Cylinder005");
@@ -155,21 +173,30 @@ bool puzzle4Solved;
 			}
 
 			if(Input.GetKeyDown(KeyCode.Space)){
-				
-				Renderer rend = activeObj.GetComponent<Renderer>();
-				rend.material.SetColor("_Color", Color.red);
 				puzzle1Code += puzzle1Input[puzzleSelX1,puzzleSelY1];
 				Debug.Log(puzzle1Code);
+
+				numberDisplay = GameObject.Find("Puzzle1Txt");
+				
+				displayNumber = numberDisplay.GetComponent<Text>();
+				displayNumber.text = puzzle1Code;
+
 				if(puzzle1Code.Length == 4){
 					if(puzzle1Code == puzzle1Solution){
-						Debug.Log("Puzzle solved!");
+						Debug.Log("Challenge solved!");
 						puzzle1Solved = true;
 						subPuzzleLock = false;
 						puzzle1Lock = false;
 						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
 						pointerNav.transform.position = activeObj.transform.position;
+
+						challengeComplete = GameObject.Find("Challenge_solved1");
+						Renderer rend = challengeComplete.GetComponent<Renderer>();
+						rend.material.SetColor("_Color", Color.green);
 					} else {
 						Debug.Log("Wrong code");
+						StartCoroutine(waitDisplay());
+						
 						puzzle1Code = "";
 					}
 				}
@@ -187,10 +214,27 @@ bool puzzle4Solved;
 				
 				if(activeObj.transform.rotation.eulerAngles.x == 300){
 					activeObj.transform.Rotate(Vector3.right, 120);
-					
+					leverValues[puzzleSelX2] = 1;
 				} else {
 					activeObj.transform.Rotate(Vector3.right, -120);
-		
+					leverValues[puzzleSelX2] = 0;
+				}
+
+				string p2Output = "";
+				for(int i = 0;leverValues.Length > i; i++){
+						p2Output = p2Output + leverValues[i].ToString();
+					}
+				
+				if(p2Output == "01101"){
+					puzzle2Solved = true;
+					subPuzzleLock = false;
+					puzzle2Lock = false;
+					activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
+					pointerNav.transform.position = activeObj.transform.position;
+
+					challengeComplete = GameObject.Find("Challenge_solved2");
+					Renderer rend = challengeComplete.GetComponent<Renderer>();
+					rend.material.SetColor("_Color", Color.green);
 				}
 			}
 
@@ -220,12 +264,16 @@ bool puzzle4Solved;
 						p3Output = p3Output + slotValues[i].ToString();
 					}
 					if(p3Output == "1234"){
-						Debug.Log("Puzzled solved!");
+						Debug.Log("Challenge solved!");
 						puzzle3Solved = true;
 						subPuzzleLock = false;
 						puzzle3Lock = false;
 						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
 						pointerNav.transform.position = activeObj.transform.position;
+
+						challengeComplete = GameObject.Find("Challenge_solved3");
+						Renderer rend = challengeComplete.GetComponent<Renderer>();
+						rend.material.SetColor("_Color", Color.green);
 					} else {
 						Debug.Log("Wrong input.");
 					}
@@ -255,13 +303,34 @@ bool puzzle4Solved;
 
 			if(Input.GetKeyDown(KeyCode.Space)){
 				
-				if(activeObj.transform.rotation.eulerAngles.x == 300){
-					activeObj.transform.Rotate(Vector3.right, 120);
+				puzzle4Progress += puzzle4Input[puzzleSelX4,puzzleSelY4];
+				
+				if (puzzle4Progress == "C"){
+					pBarP4.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PBar1");
+				} else if (puzzle4Progress == "CD"){
+					pBarP4.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PBar2");
+				} else if (puzzle4Progress == "CDD"){
+					pBarP4.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PBar3");
+				} else if (puzzle4Progress == "CDDA"){
+					pBarP4.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PBar4");
+				} else if (puzzle4Progress == "CDDAB"){
+					pBarP4.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PBar5");
+					Debug.Log("Challenge Solved");
+					puzzle4Solved = true;
+					subPuzzleLock = false;
+					puzzle4Lock = false;
+					activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
+					pointerNav.transform.position = activeObj.transform.position;
 					
+					challengeComplete = GameObject.Find("Challenge_solved4");
+					Renderer rend = challengeComplete.GetComponent<Renderer>();
+					rend.material.SetColor("_Color", Color.green);
 				} else {
-					activeObj.transform.Rotate(Vector3.right, -120);
-		
+					pBarP4.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PBar0");
+					Debug.Log("Puzzle reset");
+					puzzle4Progress = "";
 				}
+				
 			}
 		}
 
@@ -273,7 +342,7 @@ bool puzzle4Solved;
 				puzzle1Lock = true;
 				activeObj = GameObject.Find(puzzle1Nav[puzzleSelX1,puzzleSelY1]);
 				pointerNav.transform.position = activeObj.transform.position;
-			} else if (selectionX == 0 && selectionY == 1) {
+			} else if (selectionX == 0 && selectionY == 1 && puzzle2Solved == false) {
 				subPuzzleLock = true;
 				puzzle2Lock = true;
 				Debug.Log("Puzzle2");
@@ -286,7 +355,7 @@ bool puzzle4Solved;
 				activeObj = GameObject.Find(puzzle3Nav[puzzleSelX3]);
 				pointerNav.transform.position = activeObj.transform.position;
 
-			} else if (selectionX == 1 && selectionY == 1) {
+			} else if (selectionX == 1 && selectionY == 1 && puzzle4Solved == false) {
 				subPuzzleLock = true;
 				puzzle4Lock = true;
 				Debug.Log("Puzzle4");
@@ -304,8 +373,28 @@ bool puzzle4Solved;
 			pointerNav.transform.position = activeObj.transform.position;
 		}
 
+		if(puzzle1Solved == true && puzzle2Solved == true && puzzle3Solved == true && puzzle4Solved == true){
+			GameObject finish1 = GameObject.Find("Cylinder015");
+			finish1.GetComponent<Renderer>().enabled = false;
+			GameObject finish2 = GameObject.Find("Cylinder017");
+			finish2.GetComponent<Renderer>().enabled = false;
+			GameObject finish3 = GameObject.Find("Cylinder018");
+			finish3.GetComponent<Renderer>().enabled = false;
+			GameObject finish4 = GameObject.Find("Cylinder019");
+			finish4.GetComponent<Renderer>().enabled = false;
+		}
 
 	}
 	
+	IEnumerator waitDisplay(){
+		displayNumber.text = puzzle1Code;
+		yield return new WaitForSecondsRealtime(1);
+		displayNumber.text = "****";
+		yield return new WaitForSecondsRealtime(1);
+		displayNumber.text = "";
+
+	}
 
 }
+						
+						
