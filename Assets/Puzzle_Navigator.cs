@@ -21,9 +21,11 @@ string[,] mainPuzzles = new string[,]{
 	{("Box019"),("Box018")},
 };
 
+int[] yearOptions = new int[]{1954, 1784, 1892};
+
 //Numberpad display
-GameObject numberDisplay;
-Text displayNumber;
+GameObject numberDisplay1, numberDisplay2, yearDisplay;
+Text displayNumber1, displayNumber2 , displayYear;
 
 //puzzle1 Nav, Input & Solutions
 string[,] puzzle1Nav = new string[,]{
@@ -54,6 +56,10 @@ int[] leverValues = new int[]{
 	0,0,0,0,0
 };
 
+int[] onLeverValues = new int[]{
+	1,2,4,8,16
+};
+
 //Puzzle4 Nav, Input & solution
 string[,] puzzle4Nav = new string[,]{
 	{("Box038"),("Box040")},
@@ -71,46 +77,49 @@ string puzzle4Solution;
 
 //puzzlelocks
 bool subPuzzleLock;
-bool puzzle1Lock;
-bool puzzle2Lock;
-bool puzzle3Lock;
-bool puzzle4Lock;
+bool puzzle1Lock, puzzle2Lock, puzzle3Lock, puzzle4Lock;
 
 //puzzleSolved
-bool puzzle1Solved;
-bool puzzle2Solved;
-bool puzzle3Solved;
-bool puzzle4Solved;
+bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
 	void Start(){
 
 		pointerNav = GameObject.Find("Capsule");
 		pBarP4 = GameObject.Find("ProgressSprite");
 		
-		puzzle2Nav = new List<string>();
-		puzzle2Nav.Add("Cylinder005");
-		puzzle2Nav.Add("Cylinder006");
-		puzzle2Nav.Add("Cylinder007");
-		puzzle2Nav.Add("Cylinder008");
-		puzzle2Nav.Add("Cylinder009");
+		puzzle2Nav = new List<string>(new string[] {"Cylinder005","Cylinder006","Cylinder007","Cylinder008","Cylinder009"});
+		
 
-		puzzle3Nav = new List<string>();
-		puzzle3Nav.Add("Cylinder010");
-		puzzle3Nav.Add("Cylinder011");
-		puzzle3Nav.Add("Cylinder012");
-		puzzle3Nav.Add("Cylinder013");
-		puzzle3Nav.Add("Cylinder014");
+		puzzle3Nav = new List<string>(new string[] {"Cylinder010","Cylinder011","Cylinder012","Cylinder013","Cylinder014"});
 
-		//Puzzle 1 solutions randomizer
-		puzzle1Solutions = new List<string>();
-		puzzle1Solutions.Add("3972");
-		puzzle1Solutions.Add("5684");
-		puzzle1Solutions.Add("1834");
-		puzzle1Solutions.Add("8471");
 
-		puzzle1Solution = puzzle1Solutions[Random.Range(0,3)];
+		//Challenge 1 solutions randomizer
+		puzzle1Solutions = new List<string>(new string[]{"3972","5684","1834","8471", "4373", "4394"});
+
+		//Challenge 2 input randomizer
+		string test = "";
+		for(int i = 0; i < onLeverValues.Length; i++){
+			
+			int tmp = onLeverValues[i];
+			int j = Random.Range(i, onLeverValues.Length);
+			onLeverValues[i] = onLeverValues[j];
+			onLeverValues[j] = tmp;
+		}
+		
+
+
+		//pushes activeyear to display
+		int activeYear = yearOptions[Random.Range(0,3)];
+
+		yearDisplay = GameObject.Find("YearTxt");
+				
+		displayYear = yearDisplay.GetComponent<Text>();
+		displayYear.text = activeYear.ToString();
+
+		//generates challengesolutions
+		seedGenerator(activeYear);
+
 		Debug.Log("Puzzle1Solution = " + puzzle1Solution);
-
 		//General navigation
 		selectionX = 0;
 		selectionY = 0;
@@ -176,10 +185,10 @@ bool puzzle4Solved;
 				puzzle1Code += puzzle1Input[puzzleSelX1,puzzleSelY1];
 				Debug.Log(puzzle1Code);
 
-				numberDisplay = GameObject.Find("Puzzle1Txt");
+				numberDisplay1 = GameObject.Find("Puzzle1Txt");
 				
-				displayNumber = numberDisplay.GetComponent<Text>();
-				displayNumber.text = puzzle1Code;
+				displayNumber1 = numberDisplay1.GetComponent<Text>();
+				displayNumber1.text = puzzle1Code;
 
 				if(puzzle1Code.Length == 4){
 					if(puzzle1Code == puzzle1Solution){
@@ -214,18 +223,23 @@ bool puzzle4Solved;
 				
 				if(activeObj.transform.rotation.eulerAngles.x == 300){
 					activeObj.transform.Rotate(Vector3.right, 120);
-					leverValues[puzzleSelX2] = 1;
+					leverValues[puzzleSelX2] = onLeverValues[puzzleSelX2];
+					Debug.Log(onLeverValues[puzzleSelX2]);
 				} else {
 					activeObj.transform.Rotate(Vector3.right, -120);
 					leverValues[puzzleSelX2] = 0;
 				}
 
-				string p2Output = "";
+				int p2Output = 0;
 				for(int i = 0;leverValues.Length > i; i++){
-						p2Output = p2Output + leverValues[i].ToString();
+						p2Output = p2Output + leverValues[i];
 					}
+				numberDisplay2 = GameObject.Find("Puzzle2Txt");
 				
-				if(p2Output == "01101"){
+				displayNumber2 = numberDisplay2.GetComponent<Text>();
+				displayNumber2.text = p2Output.ToString();
+
+				if(p2Output == 31){
 					puzzle2Solved = true;
 					subPuzzleLock = false;
 					puzzle2Lock = false;
@@ -387,12 +401,27 @@ bool puzzle4Solved;
 	}
 	
 	IEnumerator waitDisplay(){
-		displayNumber.text = puzzle1Code;
+		displayNumber1.text = puzzle1Code;
 		yield return new WaitForSecondsRealtime(1);
-		displayNumber.text = "****";
+		displayNumber1.text = "****";
 		yield return new WaitForSecondsRealtime(1);
-		displayNumber.text = "";
+		displayNumber1.text = "";
 
+	}
+
+	public string seedGenerator(int year){
+		
+		if(year == 1954){
+			puzzle1Solution = puzzle1Solutions[Random.Range(0,2)];
+		} else if (year == 1784){
+			puzzle1Solution = puzzle1Solutions[Random.Range(2,4)];
+		} else {
+			puzzle1Solution = puzzle1Solutions[Random.Range(4,6)];
+		}
+		
+
+		string test = "Challenges generated for year " + year;
+		return test;
 	}
 
 }
