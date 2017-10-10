@@ -44,20 +44,29 @@ public List<string> puzzle1Solutions;
 string puzzle1Code;
 string puzzle1Solution;
 
-//Puzzle2 Nav
-public List<string> puzzle2Nav;
-int[] slotValues = new int[]{
-	1,1,1,1
-};
 
-//Puzzle3 Nav
-public List<string> puzzle3Nav;
+//Puzzle2 Nav, Input
+public List<string> puzzle2Nav;
 int[] leverValues = new int[]{
 	0,0,0,0,0
 };
 
 int[] onLeverValues = new int[]{
 	1,2,4,8,16
+};
+
+bool pState1, pState2 = false;
+
+public List<int> puzzle2DaySolutions;
+public List<int> puzzle2MonthSolutions;
+
+public int puzzle2DaySolution;
+public int puzzle2MonthSolution;
+
+//Puzzle3 Nav
+public List<string> puzzle3Nav;
+int[] slotValues = new int[]{
+	1,1,1,1
 };
 
 //Puzzle4 Nav, Input & solution
@@ -93,11 +102,11 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 		puzzle3Nav = new List<string>(new string[] {"Cylinder010","Cylinder011","Cylinder012","Cylinder013","Cylinder014"});
 
 
-		//Challenge 1 solutions randomizer
+		//Challenge 1 solutions
 		puzzle1Solutions = new List<string>(new string[]{"3972","5684","1834","8471", "4373", "4394"});
 
 		//Challenge 2 input randomizer
-		string test = "";
+		
 		for(int i = 0; i < onLeverValues.Length; i++){
 			
 			int tmp = onLeverValues[i];
@@ -105,8 +114,10 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 			onLeverValues[i] = onLeverValues[j];
 			onLeverValues[j] = tmp;
 		}
-		
-
+		//1954, 1784, 1892}
+		//Challenge 2 solutions
+		puzzle2DaySolutions = new List<int>(new int[]{27,13,5,30,15,19});	
+		puzzle2MonthSolutions = new List<int>(new int[]{3,10,7,11,6,4});
 
 		//pushes activeyear to display
 		int activeYear = yearOptions[Random.Range(0,3)];
@@ -199,9 +210,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
 						pointerNav.transform.position = activeObj.transform.position;
 
-						challengeComplete = GameObject.Find("Challenge_solved1");
-						Renderer rend = challengeComplete.GetComponent<Renderer>();
-						rend.material.SetColor("_Color", Color.green);
+						completionMarker("Challenge_solved1");
 					} else {
 						Debug.Log("Wrong code");
 						StartCoroutine(waitDisplay());
@@ -239,16 +248,26 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 				displayNumber2 = numberDisplay2.GetComponent<Text>();
 				displayNumber2.text = p2Output.ToString();
 
-				if(p2Output == 31){
+				if(pState1 == false && p2Output == puzzle2DaySolution){
+						completionMarker("Challenge_2_p1");
+						
+						pState1 = true;
+				
+				} else if (pState2 == false && p2Output == puzzle2MonthSolution){
+						completionMarker("Challenge_2_p2");
+						
+						pState2 = true;
+					
+				} 
+
+				if(pState1 == true && pState2 == true){
 					puzzle2Solved = true;
 					subPuzzleLock = false;
 					puzzle2Lock = false;
 					activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
 					pointerNav.transform.position = activeObj.transform.position;
 
-					challengeComplete = GameObject.Find("Challenge_solved2");
-					Renderer rend = challengeComplete.GetComponent<Renderer>();
-					rend.material.SetColor("_Color", Color.green);
+					completionMarker("Challenge_solved2");
 				}
 			}
 
@@ -285,9 +304,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
 						pointerNav.transform.position = activeObj.transform.position;
 
-						challengeComplete = GameObject.Find("Challenge_solved3");
-						Renderer rend = challengeComplete.GetComponent<Renderer>();
-						rend.material.SetColor("_Color", Color.green);
+						completionMarker("Challenge_solved3");
 					} else {
 						Debug.Log("Wrong input.");
 					}
@@ -336,9 +353,8 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 					activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
 					pointerNav.transform.position = activeObj.transform.position;
 					
-					challengeComplete = GameObject.Find("Challenge_solved4");
-					Renderer rend = challengeComplete.GetComponent<Renderer>();
-					rend.material.SetColor("_Color", Color.green);
+					completionMarker("Challenge_solved4");
+					
 				} else {
 					pBarP4.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PBar0");
 					Debug.Log("Puzzle reset");
@@ -412,18 +428,38 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 	public string seedGenerator(int year){
 		
 		if(year == 1954){
+			//Challenge1
 			puzzle1Solution = puzzle1Solutions[Random.Range(0,2)];
+			//Challenge2
+			puzzle2DaySolution =  puzzle2DaySolutions[Random.Range(0,2)];	
+			puzzle2MonthSolution = puzzle2MonthSolutions[Random.Range(0,2)];
 		} else if (year == 1784){
+			//Challenge1
 			puzzle1Solution = puzzle1Solutions[Random.Range(2,4)];
+			//Challenge2
+			puzzle2DaySolution =  puzzle2DaySolutions[Random.Range(2,4)];	
+			puzzle2MonthSolution = puzzle2MonthSolutions[Random.Range(2,4)];
 		} else {
+			//Challenge1
 			puzzle1Solution = puzzle1Solutions[Random.Range(4,6)];
+			//Challenge2
+			puzzle2DaySolution =  puzzle2DaySolutions[Random.Range(4,6)];	
+			puzzle2MonthSolution = puzzle2MonthSolutions[Random.Range(4,6)];
 		}
+
 		
 
 		string test = "Challenges generated for year " + year;
 		return test;
 	}
 
+	public string completionMarker(string gObject){
+		challengeComplete = GameObject.Find(gObject);
+		Renderer rend = challengeComplete.GetComponent<Renderer>();
+		rend.material.SetColor("_Color", Color.green);
+		string cM = gObject + " marked as completed.";
+		return cM;
+	}
 }
 						
 						
