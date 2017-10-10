@@ -253,7 +253,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 						
 						pState1 = true;
 				
-				} else if (pState2 == false && p2Output == puzzle2MonthSolution){
+				} else if (pState1 == true && pState2 == false && p2Output == puzzle2MonthSolution){
 						completionMarker("Challenge_2_p2");
 						
 						pState2 = true;
