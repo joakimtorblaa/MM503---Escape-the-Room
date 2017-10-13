@@ -9,10 +9,10 @@ public class Puzzle_Navigator : MonoBehaviour {
 public GameObject pointerNav;
 
 public GameObject activeObj;
+public GameObject numKeys;
 public GameObject pBarP4;
 
 public GameObject challengeComplete;
-public Sprite pbar0, pbar1, pbar2, pbar3, pbar4, pbar5;
 
 int selectionX, puzzleSelX1, puzzleSelX2, puzzleSelX3, puzzleSelX4;
 int selectionY, puzzleSelY1, puzzleSelY2, puzzleSelY3, puzzleSelY4;
@@ -35,6 +35,18 @@ string[,] puzzle1Nav = new string[,]{
 };
 
 string[,] puzzle1Input = new string[,]{
+	{("1"), ("4"), ("7")},
+	{("2"), ("5"), ("8")},
+	{("3"), ("6"), ("9")},
+};
+//-------------------------------------------------------------
+//disse skal brukes som seeds for puzzle1Input
+string[,] puzzle1InputVer1 = new string[,]{
+	{("1"), ("4"), ("7")},
+	{("2"), ("5"), ("8")},
+	{("3"), ("6"), ("9")},
+};
+string[,] puzzle1InputVer2 = new string[,]{
 	{("1"), ("4"), ("7")},
 	{("2"), ("5"), ("8")},
 	{("3"), ("6"), ("9")},
@@ -426,6 +438,11 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 	}
 
 	public string seedGenerator(int year){
+		//Challenge 1 input randomizer
+		string pTest = "puzzle1InputVer1";
+		Random rnd = new Random();
+		Shuffle(rnd, puzzle1Input);
+		puzzle1Randomizer("puzzle1InputVer1");
 		
 		if(year == 1954){
 			//Challenge1
@@ -453,12 +470,45 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 		return test;
 	}
 
-	public string completionMarker(string gObject){
+	public void completionMarker(string gObject){
 		challengeComplete = GameObject.Find(gObject);
 		Renderer rend = challengeComplete.GetComponent<Renderer>();
 		rend.material.SetColor("_Color", Color.green);
-		string cM = gObject + " marked as completed.";
-		return cM;
+			
+	}
+
+	public static void Shuffle<T>(Random random, T[,] array){	
+    int lengthRow = array.GetLength(1);
+
+    for (int i = 0; array.Length - 1 > i; i++){
+        int i0 = i / lengthRow;
+        int i1 = i % lengthRow;
+
+        int j = Random.Range(i , array.Length);
+        int j0 = j / lengthRow;
+        int j1 = j % lengthRow;
+
+        T temp = array[i0, i1];
+        array[i0, i1] = array[j0, j1];
+        array[j0, j1] = temp;
+    	}
+	}
+
+	public void puzzle1Randomizer (string padVer){
+		Renderer p1Rend = new Renderer();
+		
+		if(padVer == "puzzle1InputVer1"){
+			for(int i=0;i < puzzle1Input.GetLength(0);i++){
+				for(int j=0;j < puzzle1Input.GetLength(1);j++){
+					numKeys = GameObject.Find(puzzle1Nav[i,j]);
+					p1Rend = numKeys.GetComponent<Renderer>();
+					p1Rend.material.mainTexture = Resources.Load("numSymbol" + puzzle1Input[i,j]) as Texture;
+					
+				}
+			}			
+		} else {
+			//Do generator for other version
+		}
 	}
 }
 						
