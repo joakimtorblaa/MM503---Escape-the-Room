@@ -2683,14 +2683,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointerNav: {fileID: 0}
   activeObj: {fileID: 0}
+  numKeys: {fileID: 0}
   pBarP4: {fileID: 0}
   challengeComplete: {fileID: 0}
-  pbar0: {fileID: 0}
-  pbar1: {fileID: 0}
-  pbar2: {fileID: 0}
-  pbar3: {fileID: 0}
-  pbar4: {fileID: 0}
-  pbar5: {fileID: 0}
   puzzle1Solutions: []
   puzzle2Nav: []
   puzzle2DaySolutions: 
@@ -3324,7 +3319,7 @@ RectTransform:
   m_GameObject: {fileID: 1161596924}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: -1.427}
-  m_LocalScale: {x: 0.014, y: 0.005, z: 1}
+  m_LocalScale: {x: 0.014, y: 0.014, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -3355,7 +3350,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 4
+    m_FontSize: 3
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 0

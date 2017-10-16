@@ -11,9 +11,9 @@ public GameObject pointerNav;
 public GameObject activeObj;
 public GameObject numKeys;
 public GameObject pBarP4;
-
 public GameObject challengeComplete;
 
+public Random rnd = new Random();
 int selectionX, puzzleSelX1, puzzleSelX2, puzzleSelX3, puzzleSelX4;
 int selectionY, puzzleSelY1, puzzleSelY2, puzzleSelY3, puzzleSelY4;
 string[,] mainPuzzles = new string[,]{
@@ -34,26 +34,25 @@ string[,] puzzle1Nav = new string[,]{
 	{("Box034"), ("Box033"), ("Box032")},
 };
 
-string[,] puzzle1Input = new string[,]{
-	{("1"), ("4"), ("7")},
-	{("2"), ("5"), ("8")},
-	{("3"), ("6"), ("9")},
-};
-//-------------------------------------------------------------
-//disse skal brukes som seeds for puzzle1Input
+string[,] puzzle1Input;
+
 string[,] puzzle1InputVer1 = new string[,]{
-	{("1"), ("4"), ("7")},
-	{("2"), ("5"), ("8")},
-	{("3"), ("6"), ("9")},
+	{("A"), ("D"), ("G")},
+	{("B"), ("E"), ("H")},
+	{("C"), ("F"), ("I")},
 };
 string[,] puzzle1InputVer2 = new string[,]{
-	{("1"), ("4"), ("7")},
-	{("2"), ("5"), ("8")},
-	{("3"), ("6"), ("9")},
+	{("A"), ("D"), ("K")},
+	{("B"), ("E"), ("L")},
+	{("C"), ("J"), ("M")},
 };
 public List<string> puzzle1Solutions;
 
+public List<string> puzzle1OldChar;
+public List<string> puzzle1NewChar;
+
 string puzzle1Code;
+bool puzzle1Resetting = false;
 string puzzle1Solution;
 
 
@@ -115,8 +114,10 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
 
 		//Challenge 1 solutions
-		puzzle1Solutions = new List<string>(new string[]{"3972","5684","1834","8471", "4373", "4394"});
+		puzzle1Solutions = new List<string>(new string[]{"¤ΩѮǷ","ƕԖЖϖ","ѮƕΘΩ","Жᴥ¶¤", "ΩǷ¶Ѯ", "ϖ‽ƕᴥ"});
 
+		puzzle1OldChar = new List<string>(new string[]{"A","B","C","D","E","F","G","H","I","J","K","L","M"});
+		puzzle1NewChar = new List<string>(new string[]{"ƕ","Ж","Ω","¶","¤","Ѯ","Ƿ","‡","Θ","ϖ","Ԗ","ᴥ","‽"});
 		//Challenge 2 input randomizer
 		
 		for(int i = 0; i < onLeverValues.Length; i++){
@@ -204,8 +205,13 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 				pointerNav.transform.position = activeObj.transform.position;
 			}
 
-			if(Input.GetKeyDown(KeyCode.Space)){
-				puzzle1Code += puzzle1Input[puzzleSelX1,puzzleSelY1];
+			if(Input.GetKeyDown(KeyCode.Space) && puzzle1Resetting == false){
+				puzzle1Code += puzzle1NewChar[puzzle1OldChar.IndexOf(puzzle1Input[puzzleSelX1,puzzleSelY1])];
+				
+				//Debug.Log(puzzle1OldChar.IndexOf(puzzle1Input[puzzleSelX1,puzzleSelY1]));
+				//find index of letter in baseArray 
+				//replace with symbol in same index as letter in replaceArray
+				//puzzle1Code.Replace(puzzle1Input[puzzleSelX1,puzzleSelY1], );
 				Debug.Log(puzzle1Code);
 
 				numberDisplay1 = GameObject.Find("Puzzle1Txt");
@@ -429,45 +435,59 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 	}
 	
 	IEnumerator waitDisplay(){
+		puzzle1Resetting = true;
 		displayNumber1.text = puzzle1Code;
 		yield return new WaitForSecondsRealtime(1);
 		displayNumber1.text = "****";
 		yield return new WaitForSecondsRealtime(1);
 		displayNumber1.text = "";
+		puzzle1Resetting = false;
 
 	}
 
-	public string seedGenerator(int year){
+	public void seedGenerator(int year){
 		//Challenge 1 input randomizer
-		string pTest = "puzzle1InputVer1";
-		Random rnd = new Random();
-		Shuffle(rnd, puzzle1Input);
-		puzzle1Randomizer("puzzle1InputVer1");
+		int p1Ver;
+		p1Ver = Random.Range(0,2);
+		Debug.Log(p1Ver);
+		p1Ver += 1;
+		puzzle1Randomizer("puzzle1InputVer" + p1Ver);
 		
 		if(year == 1954){
 			//Challenge1
-			puzzle1Solution = puzzle1Solutions[Random.Range(0,2)];
+			if(p1Ver == 1){
+				puzzle1Solution = puzzle1Solutions[0];
+			} else {
+				puzzle1Solution = puzzle1Solutions[1];
+			}
+			
 			//Challenge2
 			puzzle2DaySolution =  puzzle2DaySolutions[Random.Range(0,2)];	
 			puzzle2MonthSolution = puzzle2MonthSolutions[Random.Range(0,2)];
 		} else if (year == 1784){
 			//Challenge1
-			puzzle1Solution = puzzle1Solutions[Random.Range(2,4)];
+			if(p1Ver == 1){
+				puzzle1Solution = puzzle1Solutions[2];
+			} else {
+				puzzle1Solution = puzzle1Solutions[3];
+			}
+			
 			//Challenge2
 			puzzle2DaySolution =  puzzle2DaySolutions[Random.Range(2,4)];	
 			puzzle2MonthSolution = puzzle2MonthSolutions[Random.Range(2,4)];
 		} else {
 			//Challenge1
-			puzzle1Solution = puzzle1Solutions[Random.Range(4,6)];
+			if(p1Ver == 1){
+				puzzle1Solution = puzzle1Solutions[4];
+			} else {
+				puzzle1Solution = puzzle1Solutions[5];
+			}
+			
 			//Challenge2
 			puzzle2DaySolution =  puzzle2DaySolutions[Random.Range(4,6)];	
 			puzzle2MonthSolution = puzzle2MonthSolutions[Random.Range(4,6)];
 		}
 
-		
-
-		string test = "Challenges generated for year " + year;
-		return test;
 	}
 
 	public void completionMarker(string gObject){
@@ -496,18 +516,32 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
 	public void puzzle1Randomizer (string padVer){
 		Renderer p1Rend = new Renderer();
-		
+		Debug.Log(padVer);
 		if(padVer == "puzzle1InputVer1"){
-			for(int i=0;i < puzzle1Input.GetLength(0);i++){
-				for(int j=0;j < puzzle1Input.GetLength(1);j++){
+			Debug.Log("Versjon 1");
+			Shuffle(rnd, puzzle1InputVer1);
+			for(int i=0;i < puzzle1InputVer1.GetLength(0);i++){
+				for(int j=0;j < puzzle1InputVer1.GetLength(1);j++){
 					numKeys = GameObject.Find(puzzle1Nav[i,j]);
 					p1Rend = numKeys.GetComponent<Renderer>();
-					p1Rend.material.mainTexture = Resources.Load("numSymbol" + puzzle1Input[i,j]) as Texture;
+					p1Rend.material.mainTexture = Resources.Load("numSymbol" + puzzle1InputVer1[i,j]) as Texture;
 					
 				}
-			}			
+			}
+			puzzle1Input = puzzle1InputVer1;			
 		} else {
 			//Do generator for other version
+			Debug.Log("Versjon 2");
+			Shuffle(rnd, puzzle1InputVer2);
+			for(int i=0;i < puzzle1InputVer2.GetLength(0);i++){
+				for(int j=0;j < puzzle1InputVer2.GetLength(1);j++){
+					numKeys = GameObject.Find(puzzle1Nav[i,j]);
+					p1Rend = numKeys.GetComponent<Renderer>();
+					p1Rend.material.mainTexture = Resources.Load("numSymbol" + puzzle1InputVer2[i,j]) as Texture;
+					
+				}
+			}
+			puzzle1Input = puzzle1InputVer2;
 		}
 	}
 }
