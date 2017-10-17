@@ -13,6 +13,8 @@ public GameObject numKeys;
 public GameObject pBarP4;
 public GameObject challengeComplete;
 
+public GameObject wireC;
+
 public Random rnd = new Random();
 int selectionX, puzzleSelX1, puzzleSelX2, puzzleSelX3, puzzleSelX4;
 int selectionY, puzzleSelY1, puzzleSelY2, puzzleSelY3, puzzleSelY4;
@@ -68,9 +70,12 @@ int[] onLeverValues = new int[]{
 
 bool pState1, pState2 = false;
 
+string[] wireColor = new string[]{"blue", "red"};
+
 public List<int> puzzle2DaySolutions;
 public List<int> puzzle2MonthSolutions;
 
+public int p2Output = 0;
 public int puzzle2DaySolution;
 public int puzzle2MonthSolution;
 
@@ -94,7 +99,9 @@ string[,] puzzle4Input = new string [,]{
 string puzzle4Progress;
 string puzzle4Solution;
 
-
+//challengeseed
+int p1Ver;
+string p2Ver;
 //puzzlelocks
 bool subPuzzleLock;
 bool puzzle1Lock, puzzle2Lock, puzzle3Lock, puzzle4Lock;
@@ -107,7 +114,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 		pointerNav = GameObject.Find("Capsule");
 		pBarP4 = GameObject.Find("ProgressSprite");
 		
-		puzzle2Nav = new List<string>(new string[] {"Cylinder005","Cylinder006","Cylinder007","Cylinder008","Cylinder009"});
+		puzzle2Nav = new List<string>(new string[] {"Cylinder005","Cylinder006","Cylinder007","Cylinder008","Cylinder009","p2Button"});
 		
 
 		puzzle3Nav = new List<string>(new string[] {"Cylinder010","Cylinder011","Cylinder012","Cylinder013","Cylinder014"});
@@ -129,8 +136,8 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 		}
 		//1954, 1784, 1892}
 		//Challenge 2 solutions
-		puzzle2DaySolutions = new List<int>(new int[]{27,13,5,30,15,19});	
-		puzzle2MonthSolutions = new List<int>(new int[]{3,10,7,11,6,4});
+		puzzle2DaySolutions = new List<int>(new int[]{27,13,19,30,15,5});	
+		puzzle2MonthSolutions = new List<int>(new int[]{3,10,4,11,6,7});
 
 		//pushes activeyear to display
 		int activeYear = yearOptions[Random.Range(0,3)];
@@ -208,10 +215,6 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 			if(Input.GetKeyDown(KeyCode.Space) && puzzle1Resetting == false){
 				puzzle1Code += puzzle1NewChar[puzzle1OldChar.IndexOf(puzzle1Input[puzzleSelX1,puzzleSelY1])];
 				
-				//Debug.Log(puzzle1OldChar.IndexOf(puzzle1Input[puzzleSelX1,puzzleSelY1]));
-				//find index of letter in baseArray 
-				//replace with symbol in same index as letter in replaceArray
-				//puzzle1Code.Replace(puzzle1Input[puzzleSelX1,puzzleSelY1], );
 				Debug.Log(puzzle1Code);
 
 				numberDisplay1 = GameObject.Find("Puzzle1Txt");
@@ -240,24 +243,25 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 		} else if (subPuzzleLock == true && puzzle2Lock == true){
 
 			//stop outofrangeX (not errormessage)
-			puzzleSelX2 = (puzzleSelX2 >= 5) ? 4 : (puzzleSelX2 < 0) ? 0: puzzleSelX2;
+			puzzleSelX2 = (puzzleSelX2 >= 6) ? 5 : (puzzleSelX2 < 0) ? 0: puzzleSelX2;
 			if(horisontal != 0){
 				puzzleSelX2 += horisontal;
 				activeObj = GameObject.Find(puzzle2Nav[puzzleSelX2]);
 				pointerNav.transform.position = activeObj.transform.position;
 			}
-			if(Input.GetKeyDown(KeyCode.Space)){
+			if(Input.GetKeyDown(KeyCode.Space) && puzzle2Nav.IndexOf(puzzle2Nav[puzzleSelX2]) != 5){
 				
 				if(activeObj.transform.rotation.eulerAngles.x == 300){
 					activeObj.transform.Rotate(Vector3.right, 120);
 					leverValues[puzzleSelX2] = onLeverValues[puzzleSelX2];
-					Debug.Log(onLeverValues[puzzleSelX2]);
+					
 				} else {
+					Debug.Log("ayy?" + puzzleSelX2);
 					activeObj.transform.Rotate(Vector3.right, -120);
 					leverValues[puzzleSelX2] = 0;
 				}
-
-				int p2Output = 0;
+			
+				p2Output = 0;
 				for(int i = 0;leverValues.Length > i; i++){
 						p2Output = p2Output + leverValues[i];
 					}
@@ -265,6 +269,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 				
 				displayNumber2 = numberDisplay2.GetComponent<Text>();
 				displayNumber2.text = p2Output.ToString();
+			}else if(Input.GetKeyDown(KeyCode.Space)){
 
 				if(pState1 == false && p2Output == puzzle2DaySolution){
 						completionMarker("Challenge_2_p1");
@@ -276,7 +281,9 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 						
 						pState2 = true;
 					
-				} 
+				} else {
+					Debug.Log("Wrong input");
+				}
 
 				if(pState1 == true && pState2 == true){
 					puzzle2Solved = true;
@@ -447,35 +454,16 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
 	public void seedGenerator(int year){
 		//Challenge 1 input randomizer
-		int p1Ver;
+		
 		p1Ver = Random.Range(0,2);
+		p2Ver = wireColor[Random.Range(0,2)];
 		Debug.Log(p1Ver);
+		Debug.Log(p2Ver);
 		p1Ver += 1;
-		puzzle1Randomizer("puzzle1InputVer" + p1Ver);
+		puzzle1Initializer("puzzle1InputVer" + p1Ver);
+		wireCol(p2Ver, "Wire");
 		
 		if(year == 1954){
-			//Challenge1
-			if(p1Ver == 1){
-				puzzle1Solution = puzzle1Solutions[0];
-			} else {
-				puzzle1Solution = puzzle1Solutions[1];
-			}
-			
-			//Challenge2
-			puzzle2DaySolution =  puzzle2DaySolutions[Random.Range(0,2)];	
-			puzzle2MonthSolution = puzzle2MonthSolutions[Random.Range(0,2)];
-		} else if (year == 1784){
-			//Challenge1
-			if(p1Ver == 1){
-				puzzle1Solution = puzzle1Solutions[2];
-			} else {
-				puzzle1Solution = puzzle1Solutions[3];
-			}
-			
-			//Challenge2
-			puzzle2DaySolution =  puzzle2DaySolutions[Random.Range(2,4)];	
-			puzzle2MonthSolution = puzzle2MonthSolutions[Random.Range(2,4)];
-		} else {
 			//Challenge1
 			if(p1Ver == 1){
 				puzzle1Solution = puzzle1Solutions[4];
@@ -484,8 +472,47 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 			}
 			
 			//Challenge2
-			puzzle2DaySolution =  puzzle2DaySolutions[Random.Range(4,6)];	
-			puzzle2MonthSolution = puzzle2MonthSolutions[Random.Range(4,6)];
+			if(p2Ver == "blue"){
+				puzzle2DaySolution =  puzzle2DaySolutions[5];
+				puzzle2MonthSolution = puzzle2MonthSolutions[5];
+			} else {
+				puzzle2DaySolution =  puzzle2DaySolutions[2];
+				puzzle2MonthSolution = puzzle2MonthSolutions[2];
+			}
+		} else if (year == 1784){
+			//Challenge1
+			if(p1Ver == 1){
+				puzzle1Solution = puzzle1Solutions[0];
+			} else {
+				puzzle1Solution = puzzle1Solutions[1];
+			}
+			//Challenge2
+			if(p2Ver == "blue"){
+				puzzle2DaySolution =  puzzle2DaySolutions[3];
+				puzzle2MonthSolution = puzzle2MonthSolutions[3];
+			} else {
+				puzzle2DaySolution =  puzzle2DaySolutions[0];
+				puzzle2MonthSolution = puzzle2MonthSolutions[0];
+			}
+			
+				
+			
+		} else {
+			//Challenge1
+			if(p1Ver == 1){
+				puzzle1Solution = puzzle1Solutions[2];
+			} else {
+				puzzle1Solution = puzzle1Solutions[3];
+			}
+			
+			//Challenge2
+			if(p2Ver == "blue"){
+				puzzle2DaySolution =  puzzle2DaySolutions[4];
+				puzzle2MonthSolution = puzzle2MonthSolutions[4];
+			} else {
+				puzzle2DaySolution =  puzzle2DaySolutions[1];
+				puzzle2MonthSolution = puzzle2MonthSolutions[1];
+			}
 		}
 
 	}
@@ -494,6 +521,20 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 		challengeComplete = GameObject.Find(gObject);
 		Renderer rend = challengeComplete.GetComponent<Renderer>();
 		rend.material.SetColor("_Color", Color.green);
+			
+	}
+
+	public void wireCol(string col,string gObject){
+		if(col == "blue"){
+			wireC = GameObject.Find(gObject);
+			Renderer rend = wireC.GetComponent<Renderer>();
+			rend.material.SetColor("_Color", Color.blue);
+		} else {
+			wireC = GameObject.Find(gObject);
+			Renderer rend = wireC.GetComponent<Renderer>();
+			rend.material.SetColor("_Color", Color.red);
+		}
+		
 			
 	}
 
@@ -514,7 +555,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
     	}
 	}
 
-	public void puzzle1Randomizer (string padVer){
+	public void puzzle1Initializer (string padVer){
 		Renderer p1Rend = new Renderer();
 		Debug.Log(padVer);
 		if(padVer == "puzzle1InputVer1"){
