@@ -170,8 +170,8 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
 	void Update(){
 
-		int vertical = Input.GetKeyDown(KeyCode.DownArrow) ? 1: Input.GetKeyDown(KeyCode.UpArrow) ? -1:0;
-		int horisontal = Input.GetKeyDown(KeyCode.RightArrow) ? 1: Input.GetKeyDown(KeyCode.LeftArrow) ? -1:0;
+		int vertical = Input.GetKeyDown(KeyCode.S) ? 1: Input.GetKeyDown(KeyCode.W) ? -1:0;
+		int horisontal = Input.GetKeyDown(KeyCode.D) ? 1: Input.GetKeyDown(KeyCode.A) ? -1:0;
 
 		if(subPuzzleLock == false){
 			//stop outofrangeY (not errormessage)
@@ -256,7 +256,6 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 					leverValues[puzzleSelX2] = onLeverValues[puzzleSelX2];
 					
 				} else {
-					Debug.Log("ayy?" + puzzleSelX2);
 					activeObj.transform.Rotate(Vector3.right, -120);
 					leverValues[puzzleSelX2] = 0;
 				}
