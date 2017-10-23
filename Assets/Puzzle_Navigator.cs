@@ -85,6 +85,8 @@ int[] slotValues = new int[]{
 	1,1,1,1
 };
 
+bool leverAnimation = false;
+
 //Puzzle4 Nav, Input & solution
 string[,] puzzle4Nav = new string[,]{
 	{("Box038"),("Box040")},
@@ -298,13 +300,13 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 		} else if (subPuzzleLock == true && puzzle3Lock == true){
 			//stop outofrangeX (not errormessage)
 			puzzleSelX3 = (puzzleSelX3 >= 5) ? 4 : (puzzleSelX3 < 0) ? 0: puzzleSelX3;
-			if(horisontal != 0){
+			if(horisontal != 0 && leverAnimation == false){
 				puzzleSelX3 += horisontal;
 				activeObj = GameObject.Find(puzzle3Nav[puzzleSelX3]);
 				pointerNav.transform.position = activeObj.transform.position;
 			}
 			if(Input.GetKeyDown(KeyCode.Space) && puzzle3Nav.IndexOf(puzzle3Nav[puzzleSelX3]) != 4){
-				activeObj.transform.Rotate(Vector3.forward, 20);
+				activeObj.transform.Rotate(Vector3.back, 40);
 				if(slotValues[puzzleSelX3] < 9){
 					slotValues[puzzleSelX3] += 1;
 					Debug.Log(slotValues[puzzleSelX3] + ": value for slot " + puzzleSelX3);
@@ -315,7 +317,8 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
 			} else if (Input.GetKeyDown(KeyCode.Space)){
 				if(activeObj.transform.rotation.eulerAngles.x == 300){
-					activeObj.transform.Rotate(Vector3.right, 120);
+					//activeObj.transform.Rotate(Vector3.right, 120);
+					StartCoroutine(leverAnimate());
 					string p3Output = "";
 					for(int i = 0;slotValues.Length > i; i++){
 						p3Output = p3Output + slotValues[i].ToString();
@@ -332,10 +335,10 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 					} else {
 						Debug.Log("Wrong input.");
 					}
-				} else {
+				}/* else {
 					activeObj.transform.Rotate(Vector3.right, -120);
 		
-				}
+				}*/
 			}
 		} else if (subPuzzleLock == true && puzzle4Lock == true){
 			//stop outofrangeY (not errormessage)
@@ -449,6 +452,17 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 		displayNumber1.text = "";
 		puzzle1Resetting = false;
 
+	}
+
+	IEnumerator leverAnimate(){
+		leverAnimation = true;
+		GameObject.Find("Cylinder014").transform.Rotate(Vector3.right, 120);
+		
+		yield return new WaitForSecondsRealtime(1);
+		
+		GameObject.Find("Cylinder014").transform.Rotate(Vector3.right, -120);
+		leverAnimation = false;
+		
 	}
 
 	public void seedGenerator(int year){
