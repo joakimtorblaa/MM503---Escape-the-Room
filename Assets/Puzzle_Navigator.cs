@@ -82,9 +82,29 @@ public int puzzle2MonthSolution;
 //Puzzle3 Nav
 public List<string> puzzle3Nav;
 int[] slotValues = new int[]{
-	1,1,1,1
+	0,0,0,0
+};
+string[] p3Lights = new string[]{
+	"p3Light1","p3Light2","p3Light3"
+};
+Color[] p3LightColors = new Color[]{
+	Color.red, Color.green, Color.blue
+};
+string[] p3LightColorSet = new string[]{
+	"r", "g", "b"
 };
 
+string[] puzzle3Input = new string[]{
+	"READY", "HELP", "HELLO", "MIDDLE", "RIGHT", "STOP", "NEXT", "BLANK", "NOTHING"
+};
+List<string> puzzle3SolIndex = new List<string>{
+	"rgb","brg","grb","bgr","rbg","gbr"
+};
+string[] puzzle3Solutions = new string[]{
+	"HELLONOTHINGMIDDLEREADY","HELPSTOPNEXTMIDDLE","NEXTREADYBLANKHELLO","MIDDLENEXTHELPSTOP","READYBLANKHELLORIGHT","BLANKHELLOREADYNEXT",
+};
+
+string puzzle3Solution;
 bool leverAnimation = false;
 
 //Puzzle4 Nav, Input & solution
@@ -111,16 +131,15 @@ bool puzzle1Lock, puzzle2Lock, puzzle3Lock, puzzle4Lock;
 //puzzleSolved
 bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
-	void Start(){
+
+    void Start(){
 
 		pointerNav = GameObject.Find("Capsule");
 		pBarP4 = GameObject.Find("ProgressSprite");
 		
 		puzzle2Nav = new List<string>(new string[] {"Cylinder005","Cylinder006","Cylinder007","Cylinder008","Cylinder009","p2Button"});
 		
-
 		puzzle3Nav = new List<string>(new string[] {"Cylinder010","Cylinder011","Cylinder012","Cylinder013","Cylinder014"});
-
 
 		//Challenge 1 solutions
 		puzzle1Solutions = new List<string>(new string[]{"¤ΩѮǷ","ƕԖЖϖ","ѮƕΘΩ","Жᴥ¶¤", "ΩǷ¶Ѯ", "ϖ‽ƕᴥ"});
@@ -136,7 +155,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 			onLeverValues[i] = onLeverValues[j];
 			onLeverValues[j] = tmp;
 		}
-		//1954, 1784, 1892}
+		//1954, 1784, 1892
 		//Challenge 2 solutions
 		puzzle2DaySolutions = new List<int>(new int[]{27,13,19,30,15,5});	
 		puzzle2MonthSolutions = new List<int>(new int[]{3,10,4,11,6,7});
@@ -307,12 +326,12 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 			}
 			if(Input.GetKeyDown(KeyCode.Space) && puzzle3Nav.IndexOf(puzzle3Nav[puzzleSelX3]) != 4){
 				activeObj.transform.Rotate(Vector3.back, 40);
-				if(slotValues[puzzleSelX3] < 9){
+				if(slotValues[puzzleSelX3] < 8){
 					slotValues[puzzleSelX3] += 1;
 					Debug.Log(slotValues[puzzleSelX3] + ": value for slot " + puzzleSelX3);
 				} else {
-					Debug.Log("Back to one");
-					slotValues[puzzleSelX3] = 1;
+					Debug.Log("Back to zero");
+					slotValues[puzzleSelX3] = 0;
 				}
 
 			} else if (Input.GetKeyDown(KeyCode.Space)){
@@ -321,9 +340,9 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 					StartCoroutine(leverAnimate());
 					string p3Output = "";
 					for(int i = 0;slotValues.Length > i; i++){
-						p3Output = p3Output + slotValues[i].ToString();
+						p3Output = p3Output + puzzle3Input[slotValues[i]];
 					}
-					if(p3Output == "1234"){
+					if(p3Output == puzzle3Solution){
 						Debug.Log("Challenge solved!");
 						puzzle3Solved = true;
 						subPuzzleLock = false;
@@ -335,10 +354,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 					} else {
 						Debug.Log("Wrong input.");
 					}
-				}/* else {
-					activeObj.transform.Rotate(Vector3.right, -120);
-		
-				}*/
+				}
 			}
 		} else if (subPuzzleLock == true && puzzle4Lock == true){
 			//stop outofrangeY (not errormessage)
@@ -475,7 +491,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 		p1Ver += 1;
 		puzzle1Initializer("puzzle1InputVer" + p1Ver);
 		wireCol(p2Ver, "Wire");
-		
+		puzzle3Initializer();
 		if(year == 1954){
 			//Challenge1
 			if(p1Ver == 1){
@@ -597,6 +613,35 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 			}
 			puzzle1Input = puzzle1InputVer2;
 		}
+	}
+	public void puzzle3Initializer (){
+		string colorSetOutput = "";
+
+		for(int i = 0; i < p3LightColors.Length; i++){
+			
+			Color tmp1 = p3LightColors[i];
+			string tmp2 = p3LightColorSet[i];
+			int j = Random.Range(i, p3LightColors.Length);
+			p3LightColors[i] = p3LightColors[j];
+			p3LightColorSet[i] = p3LightColorSet[j];
+			p3LightColors[j] = tmp1;
+			p3LightColorSet[j] = tmp2;
+			
+		}
+		Debug.Log(p3LightColorSet);
+		for(int i = 0; i < p3LightColors.Length; i++){
+			challengeComplete = GameObject.Find(p3Lights[i]);
+			Renderer rend = challengeComplete.GetComponent<Renderer>();
+			rend.material.SetColor("_Color", p3LightColors[i]);
+		}
+
+		for(int i = 0; i < p3LightColorSet.Length; i++){
+			colorSetOutput = colorSetOutput + p3LightColorSet[i];
+		}
+		Debug.Log(colorSetOutput);
+		
+		puzzle3Solution = puzzle3Solutions[puzzle3SolIndex.IndexOf(colorSetOutput)];
+		Debug.Log("p3 solution = " + puzzle3Solution);
 	}
 }
 						
