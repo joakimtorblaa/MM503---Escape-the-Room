@@ -10,7 +10,7 @@ public GameObject pointerNav;
 
 public GameObject activeObj;
 public GameObject numKeys;
-public GameObject pBarP4;
+public GameObject pBarP4, pScreenP4;
 public GameObject challengeComplete;
 
 public GameObject wireC;
@@ -26,8 +26,8 @@ string[,] mainPuzzles = new string[,]{
 int[] yearOptions = new int[]{1954, 1784, 1892};
 
 //Numberpad display
-GameObject numberDisplay1, numberDisplay2, txtDisplay4, yearDisplay;
-Text displayNumber1, displayNumber2, displayTxt4, displayYear;
+GameObject numberDisplay1, numberDisplay2, yearDisplay;
+Text displayNumber1, displayNumber2, displayYear;
 
 //puzzle1 Nav, Input & Solutions
 string[,] puzzle1Nav = new string[,]{
@@ -122,13 +122,20 @@ string[] puzzle4ScreenVal = new string[]{
 	"AA", "AB", "AX", "AY", "BA", "BB", "BX", "BY", "XA", "XB", "XX", "XY", "YA", "YB", "YX", "YY" 
 };
 
-string[] puzzle4Solutions = new string[]{
-	"Y", "B", "A", "X", "B", "X", "Y", "A", "X", "A", "B", "Y", "A", "Y", "X", "B" 
+string[,] puzzle4Solutions = new string[,]{
+	{"Y", "B", "A", "X", "B", "X", "Y", "A", "X", "A", "B", "Y", "A", "Y", "X", "B"},
+	{"A", "Y", "X", "B", "X", "A", "B", "Y", "B", "X", "Y", "A", "Y", "B", "A", "X"},
+	{"X", "A", "B", "Y", "A", "Y", "X", "B", "Y", "B", "A", "X", "B", "X", "Y", "A"},
+};
+
+Color[] puzzle4Colors = new Color[]{
+	Color.red, Color.green, Color.blue
 };
 
 string puzzle4TmpVal;
 
 int puzzle4Progress;
+int puzzle4Rand;
 string puzzle4Solution;
 
 //challengeseed
@@ -146,6 +153,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 		puzzle4TmpVal = "";
 		pointerNav = GameObject.Find("Capsule");
 		pBarP4 = GameObject.Find("ProgressSprite");
+		pScreenP4 = GameObject.Find("Puzzle4Screen");
 		
 		puzzle2Nav = new List<string>(new string[] {"Cylinder005","Cylinder006","Cylinder007","Cylinder008","Cylinder009","p2Button"});
 		
@@ -387,8 +395,9 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
 			if(Input.GetKeyDown(KeyCode.Space)){
 				
-				if(puzzle4Input[puzzleSelX4,puzzleSelY4] == puzzle4Solutions[System.Array.IndexOf(puzzle4ScreenVal, puzzle4TmpVal)]){
+				if(puzzle4Input[puzzleSelX4,puzzleSelY4] == puzzle4Solutions[puzzle4Rand, System.Array.IndexOf(puzzle4ScreenVal, puzzle4TmpVal)]){
 					puzzle4Progress += 1;
+					
 					
 					if (puzzle4Progress == 1){
 						pBarP4.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PBar1");
@@ -659,15 +668,12 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 	}
 
 	public void puzzle4Screen (){
-		
+		puzzle4Rand = Random.Range(0,3);
 		puzzle4TmpVal = puzzle4ScreenVal[Random.Range(0,puzzle4ScreenVal.Length)];
-		Debug.Log(puzzle4ScreenVal[puzzle4ScreenVal.Length-1]);
-		txtDisplay4 = GameObject.Find("Puzzle4Txt");
-				
-		displayTxt4 = txtDisplay4.GetComponent<Text>();
-		displayTxt4.text = puzzle4TmpVal;
-		//generate text on screen based on random place in array
-		//input text to tmp string for comparison
+		//Debug.Log(puzzle4ScreenVal[puzzle4ScreenVal.Length-1]);
+		pScreenP4.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("p4" + puzzle4TmpVal);
+		pScreenP4.GetComponent<SpriteRenderer>().color = puzzle4Colors[puzzle4Rand];
+		
 	}
 }
 						
