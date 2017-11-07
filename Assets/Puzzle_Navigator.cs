@@ -18,6 +18,13 @@ public GameObject wireC;
 public Random rnd = new Random();
 int selectionX, puzzleSelX1, puzzleSelX2, puzzleSelX3, puzzleSelX4;
 int selectionY, puzzleSelY1, puzzleSelY2, puzzleSelY3, puzzleSelY4;
+int vertical = 0;
+int horisontal = 0;
+bool axisDown = false;
+bool axisUp = false;
+bool axisDown2 = false;
+bool axisUp2 = false;
+
 string[,] mainPuzzles = new string[,]{
 	{("Box021"),("Box020")},
 	{("Box019"),("Box018")},
@@ -216,8 +223,73 @@ bool gameCompleted;
 
 	void Update(){
 
-		int vertical = Input.GetKeyDown(KeyCode.S) ? 1: Input.GetKeyDown(KeyCode.W) ? -1:0;
-		int horisontal = Input.GetKeyDown(KeyCode.D) ? 1: Input.GetKeyDown(KeyCode.A) ? -1:0;
+		//Keyboard navigation inputs
+		vertical = Input.GetKeyDown(KeyCode.S) ? 1: Input.GetKeyDown(KeyCode.W) ? -1: 0;
+		horisontal = Input.GetKeyDown(KeyCode.D) ? 1: Input.GetKeyDown(KeyCode.A) ? -1: 0;
+		
+		//Controller navigation inputs
+		if(Input.GetAxisRaw("Vertical") < 0){
+			if(!axisDown){
+				vertical = 1;
+				axisDown = true;
+			}
+			if(axisUp){
+				vertical = 0;
+				axisUp = false;
+			}
+		} else if (Input.GetAxisRaw("Vertical") > 0){
+			if(axisDown){
+				vertical = 0;
+				axisDown = false;
+			}
+			if(!axisUp){
+				vertical = -1;
+				axisUp = true;
+			}
+		} else if (Input.GetAxisRaw("Vertical") == 0){
+			if(axisUp){
+				vertical = 0;
+				axisUp = false;
+			}
+			if(axisDown){
+				vertical = 0;
+				axisDown = false;
+			}
+			
+		}
+		
+		if(Input.GetAxisRaw("Horizontal") < 0){
+			if(!axisDown2){
+				horisontal = -1;;
+				axisDown2 = true;
+			}
+			if(axisUp2){
+				horisontal = 0;
+				axisUp2 = false;
+			}
+		} else if (Input.GetAxisRaw("Horizontal") > 0){
+			if(axisDown2){
+				horisontal = 0;
+				axisDown2 = false;
+			}
+			if(!axisUp2){
+				horisontal = 1;
+				axisUp2 = true;
+			}
+		} else if (Input.GetAxisRaw("Horizontal") == 0){
+			if(axisUp2){
+				horisontal = 0;
+				axisUp2 = false;
+			}
+			if(axisDown2){
+				horisontal = 0;
+				axisDown2 = false;
+			}
+			
+		}
+
+
+		
 
 		if(subPuzzleLock == false){
 			//stop outofrangeY (not errormessage)
@@ -258,7 +330,7 @@ bool gameCompleted;
 				pointerNav.transform.position = activeObj.transform.position;
 			}
 
-			if(Input.GetKeyDown(KeyCode.Space) && puzzle1Resetting == false){
+			if(Input.GetButtonDown("Submit") && puzzle1Resetting == false){
 				puzzle1Code += puzzle1NewChar[puzzle1OldChar.IndexOf(puzzle1Input[puzzleSelX1,puzzleSelY1])];
 				
 				Debug.Log(puzzle1Code);
@@ -299,7 +371,7 @@ bool gameCompleted;
 				activeObj = GameObject.Find(puzzle2Nav[puzzleSelX2]);
 				pointerNav.transform.position = activeObj.transform.position;
 			}
-			if(Input.GetKeyDown(KeyCode.Space) && puzzle2Nav.IndexOf(puzzle2Nav[puzzleSelX2]) != 5){
+			if(Input.GetButtonDown("Submit") && puzzle2Nav.IndexOf(puzzle2Nav[puzzleSelX2]) != 5){
 				
 				if(activeObj.transform.rotation.eulerAngles.x == 300){
 					activeObj.transform.Rotate(Vector3.right, 120);
@@ -318,7 +390,7 @@ bool gameCompleted;
 				
 				displayNumber2 = numberDisplay2.GetComponent<Text>();
 				displayNumber2.text = p2Output.ToString();
-			}else if(Input.GetKeyDown(KeyCode.Space)){
+			}else if(Input.GetButtonDown("Submit")){
 
 				if(pState1 == false && p2Output == puzzle2DaySolution){
 						completionMarker("Challenge_2_p1");
@@ -356,7 +428,7 @@ bool gameCompleted;
 				activeObj = GameObject.Find(puzzle3Nav[puzzleSelX3]);
 				pointerNav.transform.position = activeObj.transform.position;
 			}
-			if(Input.GetKeyDown(KeyCode.Space) && puzzle3Nav.IndexOf(puzzle3Nav[puzzleSelX3]) != 4){
+			if(Input.GetButtonDown("Submit") && puzzle3Nav.IndexOf(puzzle3Nav[puzzleSelX3]) != 4){
 				activeObj.transform.Rotate(Vector3.back, 40);
 				if(slotValues[puzzleSelX3] < 8){
 					slotValues[puzzleSelX3] += 1;
@@ -366,7 +438,7 @@ bool gameCompleted;
 					slotValues[puzzleSelX3] = 0;
 				}
 
-			} else if (Input.GetKeyDown(KeyCode.Space)){
+			} else if (Input.GetButtonDown("Submit")){
 				if(activeObj.transform.rotation.eulerAngles.x == 300){
 					//activeObj.transform.Rotate(Vector3.right, 120);
 					StartCoroutine(leverAnimate());
@@ -410,7 +482,7 @@ bool gameCompleted;
 				pointerNav.transform.position = activeObj.transform.position;
 			}
 
-			if(Input.GetKeyDown(KeyCode.Space)){
+			if(Input.GetButtonDown("Submit")){
 				
 				if(puzzle4Input[puzzleSelX4,puzzleSelY4] == puzzle4Solutions[puzzle4Rand, System.Array.IndexOf(puzzle4ScreenVal, puzzle4TmpVal)]){
 					puzzle4Progress += 1;
@@ -450,7 +522,7 @@ bool gameCompleted;
 		}
 
 
-		if(Input.GetKeyDown(KeyCode.Space) && subPuzzleLock == false){
+		if(Input.GetButtonDown("Submit") && subPuzzleLock == false){
 			
 			if(selectionX == 0 && selectionY == 0 && puzzle1Solved == false){
 				subPuzzleLock = true;
@@ -478,7 +550,7 @@ bool gameCompleted;
 				pointerNav.transform.position = activeObj.transform.position;
 			}
 		}
-		if(Input.GetKeyDown(KeyCode.Escape) && subPuzzleLock == true){
+		if(Input.GetButtonDown("Cancel") && subPuzzleLock == true){
 			subPuzzleLock = false;
 			puzzle1Lock = false;
 			puzzle2Lock = false;
@@ -517,7 +589,7 @@ bool gameCompleted;
 			Debug.Log("You win! You escaped with " + minutes + " minutes and " + seconds + " seconds left on the clock!");
 			
 		} else {
-			Debug.Log("You lose nigga");
+			Debug.Log("You lose!");
 		}
 	}
 	

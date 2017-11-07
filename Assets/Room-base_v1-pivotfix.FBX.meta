@@ -77,6 +77,19 @@ ModelImporter:
     100138: Tube005
     100140: Tube006
     100142: Tube007
+    100144: Cylinder020
+    100146: Cylinder021
+    100148: Cylinder022
+    100150: Cylinder023
+    100152: Cylinder024
+    100154: Cylinder025
+    100156: Cylinder026
+    100158: Cylinder027
+    100160: Wall1
+    100162: Wall2
+    100164: Wall3
+    100166: Wall4
+    100168: Wire
     400000: Box002
     400002: Box003
     400004: Box004
@@ -149,6 +162,19 @@ ModelImporter:
     400138: Tube005
     400140: Tube006
     400142: Tube007
+    400144: Cylinder020
+    400146: Cylinder021
+    400148: Cylinder022
+    400150: Cylinder023
+    400152: Cylinder024
+    400154: Cylinder025
+    400156: Cylinder026
+    400158: Cylinder027
+    400160: Wall1
+    400162: Wall2
+    400164: Wall3
+    400166: Wall4
+    400168: Wire
     2300000: Box002
     2300002: Box003
     2300004: Box004
@@ -217,6 +243,19 @@ ModelImporter:
     2300130: Tube005
     2300132: Tube006
     2300134: Tube007
+    2300136: Cylinder020
+    2300138: Cylinder021
+    2300140: Cylinder022
+    2300142: Cylinder023
+    2300144: Cylinder024
+    2300146: Cylinder025
+    2300148: Cylinder026
+    2300150: Cylinder027
+    2300152: Wall1
+    2300154: Wall2
+    2300156: Wall3
+    2300158: Wall4
+    2300160: Wire
     3300000: Box002
     3300002: Box003
     3300004: Box004
@@ -285,6 +324,19 @@ ModelImporter:
     3300130: Tube005
     3300132: Tube006
     3300134: Tube007
+    3300136: Cylinder020
+    3300138: Cylinder021
+    3300140: Cylinder022
+    3300142: Cylinder023
+    3300144: Cylinder024
+    3300146: Cylinder025
+    3300148: Cylinder026
+    3300150: Cylinder027
+    3300152: Wall1
+    3300154: Wall2
+    3300156: Wall3
+    3300158: Wall4
+    3300160: Wire
     4300000: Plane001
     4300002: Cylinder001
     4300004: Cylinder002
@@ -353,6 +405,20 @@ ModelImporter:
     4300130: Plane003
     4300132: Plane004
     4300134: Plane005
+    4300136: Wire
+    4300138: Cylinder020
+    4300140: Cylinder021
+    4300142: Cylinder022
+    4300144: Cylinder023
+    4300146: Cylinder024
+    4300148: Cylinder025
+    4300150: Cylinder026
+    4300152: Cylinder027
+    4300154: Wall1
+    4300156: Wall2
+    4300158: Wall3
+    4300160: Wall4
+    7400000: Take 001
     9500000: //RootNode
   materials:
     importMaterials: 1
