@@ -25,9 +25,12 @@ string[,] mainPuzzles = new string[,]{
 
 int[] yearOptions = new int[]{1954, 1784, 1892};
 
+float timeLeft = 300.0f;
+float minutes;
+float seconds;
 //Numberpad display
-GameObject numberDisplay1, numberDisplay2, yearDisplay;
-Text displayNumber1, displayNumber2, displayYear;
+GameObject numberDisplay1, numberDisplay2, yearDisplay, timerDisplay;
+Text displayNumber1, displayNumber2, displayYear, displayTimer;
 
 //puzzle1 Nav, Input & Solutions
 string[,] puzzle1Nav = new string[,]{
@@ -148,8 +151,12 @@ bool puzzle1Lock, puzzle2Lock, puzzle3Lock, puzzle4Lock;
 //puzzleSolved
 bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
+bool gameCompleted;
+
 
     void Start(){
+		gameCompleted = false;
+		
 		puzzle4TmpVal = "";
 		pointerNav = GameObject.Find("Capsule");
 		pBarP4 = GameObject.Find("ProgressSprite");
@@ -188,7 +195,7 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
 		//generates challengesolutions
 		seedGenerator(activeYear);
-
+		
 		Debug.Log("Puzzle1Solution = " + puzzle1Solution);
 		//General navigation
 		selectionX = 0;
@@ -270,6 +277,10 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
 						pointerNav.transform.position = activeObj.transform.position;
 
+						if(puzzle2Lock == false || puzzle3Lock == false || puzzle4Lock == false){
+							timeLeft = timeLeft + 30;
+						}
+						
 						completionMarker("Challenge_solved1");
 					} else {
 						Debug.Log("Wrong code");
@@ -330,6 +341,9 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 					activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
 					pointerNav.transform.position = activeObj.transform.position;
 
+					if(puzzle1Lock == false || puzzle3Lock == false || puzzle4Lock == false){
+							timeLeft = timeLeft + 30;
+					}
 					completionMarker("Challenge_solved2");
 				}
 			}
@@ -368,6 +382,9 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
 						pointerNav.transform.position = activeObj.transform.position;
 
+						if(puzzle1Lock == false || puzzle2Lock == false || puzzle4Lock == false){
+							timeLeft = timeLeft + 30;
+						}
 						completionMarker("Challenge_solved3");
 					} else {
 						Debug.Log("Wrong input.");
@@ -416,6 +433,9 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
 						pointerNav.transform.position = activeObj.transform.position;
 						
+						if(puzzle1Lock == false || puzzle2Lock == false || puzzle3Lock == false){
+							timeLeft = timeLeft + 30;
+						}
 						completionMarker("Challenge_solved4");
 					}
 				} else {
@@ -477,10 +497,33 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 			finish3.GetComponent<Renderer>().enabled = false;
 			GameObject finish4 = GameObject.Find("Cylinder019");
 			finish4.GetComponent<Renderer>().enabled = false;
+			gameCompleted = true;
 		}
-
+		if(timeLeft > 0 && gameCompleted == false){
+		//Debug.Log("its tiem");
+		timeLeft -= Time.deltaTime;
+		minutes = Mathf.Floor(timeLeft / 60);
+		seconds = timeLeft % 60;
+		if(seconds > 59) seconds = 59;
+		timerDisplay = GameObject.Find("TimerTxt");
+		if(minutes < 0){
+			minutes = 0;
+			seconds = 0;
+		}
+		displayTimer = timerDisplay.GetComponent<Text>();
+		displayTimer.text = string.Format("{0:0}:{1:00}", minutes, seconds);
+		} 
+		else if(gameCompleted == true) {
+			Debug.Log("You win! You escaped with " + minutes + " minutes and " + seconds + " seconds left on the clock!");
+			
+		} else {
+			Debug.Log("You lose nigga");
+		}
 	}
 	
+	
+
+
 	IEnumerator waitDisplay(){
 		puzzle1Resetting = true;
 		displayNumber1.text = puzzle1Code;
