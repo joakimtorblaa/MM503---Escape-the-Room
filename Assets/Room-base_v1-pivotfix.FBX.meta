@@ -90,6 +90,68 @@ ModelImporter:
     100164: Wall3
     100166: Wall4
     100168: Wire
+    100170: Box043
+    100172: Box044
+    100174: Box045
+    100176: Box047
+    100178: Box048
+    100180: Box049
+    100182: Box050
+    100184: Box051
+    100186: Box052
+    100188: Box053
+    100190: Box054
+    100192: Box055
+    100194: Box056
+    100196: Box057
+    100198: Box058
+    100200: Box059
+    100202: Box060
+    100204: Box061
+    100206: Box062
+    100208: Box063
+    100210: Cylinder028
+    100212: Cylinder029
+    100214: Cylinder030
+    100216: Cylinder031
+    100218: Cylinder034
+    100220: Cylinder035
+    100222: Cylinder036
+    100224: Cylinder037
+    100226: Cylinder038
+    100228: Cylinder039
+    100230: Cylinder040
+    100232: Cylinder041
+    100234: Cylinder042
+    100236: Cylinder043
+    100238: Cylinder044
+    100240: Cylinder045
+    100242: Cylinder046
+    100244: Cylinder047
+    100246: Cylinder048
+    100248: Cylinder049
+    100250: Cylinder050
+    100252: Cylinder051
+    100254: Cylinder052
+    100256: Cylinder053
+    100258: Cylinder054
+    100260: Cylinder055
+    100262: Cylinder056
+    100264: Cylinder057
+    100266: Cylinder058
+    100268: Line001
+    100270: Line002
+    100272: Line003
+    100274: Line004
+    100276: Line005
+    100278: Module_mount001
+    100280: Module_mount002
+    100282: Module_mount003
+    100284: Module_mount004
+    100286: Module_mount005
+    100288: Module_mount006
+    100290: Module_mount007
+    100292: Module_mount008
     400000: Box002
     400002: Box003
     400004: Box004
@@ -175,6 +237,68 @@ ModelImporter:
     400164: Wall3
     400166: Wall4
     400168: Wire
+    400170: Box043
+    400172: Box044
+    400174: Box045
+    400176: Box047
+    400178: Box048
+    400180: Box049
+    400182: Box050
+    400184: Box051
+    400186: Box052
+    400188: Box053
+    400190: Box054
+    400192: Box055
+    400194: Box056
+    400196: Box057
+    400198: Box058
+    400200: Box059
+    400202: Box060
+    400204: Box061
+    400206: Box062
+    400208: Box063
+    400210: Cylinder028
+    400212: Cylinder029
+    400214: Cylinder030
+    400216: Cylinder031
+    400218: Cylinder034
+    400220: Cylinder035
+    400222: Cylinder036
+    400224: Cylinder037
+    400226: Cylinder038
+    400228: Cylinder039
+    400230: Cylinder040
+    400232: Cylinder041
+    400234: Cylinder042
+    400236: Cylinder043
+    400238: Cylinder044
+    400240: Cylinder045
+    400242: Cylinder046
+    400244: Cylinder047
+    400246: Cylinder048
+    400248: Cylinder049
+    400250: Cylinder050
+    400252: Cylinder051
+    400254: Cylinder052
+    400256: Cylinder053
+    400258: Cylinder054
+    400260: Cylinder055
+    400262: Cylinder056
+    400264: Cylinder057
+    400266: Cylinder058
+    400268: Line001
+    400270: Line002
+    400272: Line003
+    400274: Line004
+    400276: Line005
+    400278: Module_mount001
+    400280: Module_mount002
+    400282: Module_mount003
+    400284: Module_mount004
+    400286: Module_mount005
+    400288: Module_mount006
+    400290: Module_mount007
+    400292: Module_mount008
     2300000: Box002
     2300002: Box003
     2300004: Box004
@@ -256,6 +380,60 @@ ModelImporter:
     2300156: Wall3
     2300158: Wall4
     2300160: Wire
+    2300162: Box043
+    2300164: Box044
+    2300166: Box045
+    2300168: Box047
+    2300170: Box048
+    2300172: Box049
+    2300174: Box050
+    2300176: Box051
+    2300178: Box052
+    2300180: Box053
+    2300182: Box054
+    2300184: Box055
+    2300186: Box056
+    2300188: Box057
+    2300190: Box058
+    2300192: Box059
+    2300194: Box060
+    2300196: Box061
+    2300198: Box062
+    2300200: Box063
+    2300202: Cylinder028
+    2300204: Cylinder029
+    2300206: Cylinder030
+    2300208: Cylinder031
+    2300210: Cylinder034
+    2300212: Cylinder035
+    2300214: Cylinder036
+    2300216: Cylinder037
+    2300218: Cylinder038
+    2300220: Cylinder039
+    2300222: Cylinder040
+    2300224: Cylinder041
+    2300226: Cylinder042
+    2300228: Cylinder043
+    2300230: Cylinder044
+    2300232: Cylinder045
+    2300234: Cylinder046
+    2300236: Cylinder047
+    2300238: Cylinder048
+    2300240: Cylinder049
+    2300242: Cylinder050
+    2300244: Cylinder051
+    2300246: Cylinder052
+    2300248: Cylinder053
+    2300250: Cylinder054
+    2300252: Cylinder055
+    2300254: Cylinder056
+    2300256: Cylinder057
+    2300258: Cylinder058
+    2300260: Line001
+    2300262: Line002
+    2300264: Line003
+    2300266: Line004
+    2300268: Line005
     3300000: Box002
     3300002: Box003
     3300004: Box004
@@ -337,6 +515,60 @@ ModelImporter:
     3300156: Wall3
     3300158: Wall4
     3300160: Wire
+    3300162: Box043
+    3300164: Box044
+    3300166: Box045
+    3300168: Box047
+    3300170: Box048
+    3300172: Box049
+    3300174: Box050
+    3300176: Box051
+    3300178: Box052
+    3300180: Box053
+    3300182: Box054
+    3300184: Box055
+    3300186: Box056
+    3300188: Box057
+    3300190: Box058
+    3300192: Box059
+    3300194: Box060
+    3300196: Box061
+    3300198: Box062
+    3300200: Box063
+    3300202: Cylinder028
+    3300204: Cylinder029
+    3300206: Cylinder030
+    3300208: Cylinder031
+    3300210: Cylinder034
+    3300212: Cylinder035
+    3300214: Cylinder036
+    3300216: Cylinder037
+    3300218: Cylinder038
+    3300220: Cylinder039
+    3300222: Cylinder040
+    3300224: Cylinder041
+    3300226: Cylinder042
+    3300228: Cylinder043
+    3300230: Cylinder044
+    3300232: Cylinder045
+    3300234: Cylinder046
+    3300236: Cylinder047
+    3300238: Cylinder048
+    3300240: Cylinder049
+    3300242: Cylinder050
+    3300244: Cylinder051
+    3300246: Cylinder052
+    3300248: Cylinder053
+    3300250: Cylinder054
+    3300252: Cylinder055
+    3300254: Cylinder056
+    3300256: Cylinder057
+    3300258: Cylinder058
+    3300260: Line001
+    3300262: Line002
+    3300264: Line003
+    3300266: Line004
+    3300268: Line005
     4300000: Plane001
     4300002: Cylinder001
     4300004: Cylinder002
@@ -418,6 +650,60 @@ ModelImporter:
     4300156: Wall2
     4300158: Wall3
     4300160: Wall4
+    4300162: Box043
+    4300164: Cylinder028
+    4300166: Cylinder029
+    4300168: Box044
+    4300170: Cylinder030
+    4300172: Cylinder031
+    4300174: Box045
+    4300176: Box047
+    4300178: Cylinder034
+    4300180: Cylinder035
+    4300182: Box048
+    4300184: Cylinder036
+    4300186: Cylinder037
+    4300188: Box050
+    4300190: Cylinder040
+    4300192: Cylinder041
+    4300194: Box049
+    4300196: Cylinder038
+    4300198: Cylinder039
+    4300200: Box051
+    4300202: Cylinder042
+    4300204: Cylinder043
+    4300206: Cylinder044
+    4300208: Cylinder045
+    4300210: Cylinder046
+    4300212: Box053
+    4300214: Cylinder049
+    4300216: Cylinder050
+    4300218: Box052
+    4300220: Cylinder047
+    4300222: Cylinder048
+    4300224: Cylinder051
+    4300226: Cylinder052
+    4300228: Cylinder053
+    4300230: Cylinder054
+    4300232: Cylinder055
+    4300234: Cylinder056
+    4300236: Box054
+    4300238: Box055
+    4300240: Box056
+    4300242: Box057
+    4300244: Box058
+    4300246: Line001
+    4300248: Line002
+    4300250: Line003
+    4300252: Line004
+    4300254: Line005
+    4300256: Cylinder057
+    4300258: Cylinder058
+    4300260: Box059
+    4300262: Box060
+    4300264: Box061
+    4300266: Box062
+    4300268: Box063
     7400000: Take 001
     9500000: //RootNode
   materials:
