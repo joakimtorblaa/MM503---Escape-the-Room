@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Puzzle_Navigator : MonoBehaviour {
 
 
-public GameObject pointerNav;
 
-public GameObject activeObj;
-public GameObject numKeys;
-public GameObject pBarP4, pScreenP4;
-public GameObject challengeComplete;
+public GameObject pointerNav, activeObj, numKeys, pBarP4, pScreenP4, challengeComplete, wireC;
 
-public GameObject wireC;
 
 public Random rnd = new Random();
 int selectionX, puzzleSelX1, puzzleSelX2, puzzleSelX3, puzzleSelX4;
@@ -160,6 +156,9 @@ bool puzzle1Solved, puzzle2Solved, puzzle3Solved, puzzle4Solved;
 
 bool gameCompleted;
 
+GameObject gameWin, gameWinTxt1, gameLose;
+Text gameWinTxt2;
+Canvas gameWinC, gameLoseC;
 
     void Start(){
 		gameCompleted = false;
@@ -203,7 +202,6 @@ bool gameCompleted;
 		//generates challengesolutions
 		seedGenerator(activeYear);
 		
-		Debug.Log("Puzzle1Solution = " + puzzle1Solution);
 		//General navigation
 		selectionX = 0;
 		selectionY = 0;
@@ -332,8 +330,6 @@ bool gameCompleted;
 
 			if(Input.GetButtonDown("Submit") && puzzle1Resetting == false){
 				puzzle1Code += puzzle1NewChar[puzzle1OldChar.IndexOf(puzzle1Input[puzzleSelX1,puzzleSelY1])];
-				
-				Debug.Log(puzzle1Code);
 
 				numberDisplay1 = GameObject.Find("Puzzle1Txt");
 				
@@ -432,9 +428,8 @@ bool gameCompleted;
 				activeObj.transform.Rotate(Vector3.back, 40);
 				if(slotValues[puzzleSelX3] < 8){
 					slotValues[puzzleSelX3] += 1;
-					Debug.Log(slotValues[puzzleSelX3] + ": value for slot " + puzzleSelX3);
 				} else {
-					Debug.Log("Back to zero");
+					//sets wheel to first slot when full completing a full rotation
 					slotValues[puzzleSelX3] = 0;
 				}
 
@@ -532,20 +527,20 @@ bool gameCompleted;
 			} else if (selectionX == 0 && selectionY == 1 && puzzle2Solved == false) {
 				subPuzzleLock = true;
 				puzzle2Lock = true;
-				Debug.Log("Puzzle2");
+				
 				activeObj = GameObject.Find(puzzle2Nav[puzzleSelX2]);
 				pointerNav.transform.position = activeObj.transform.position;
 			} else if (selectionX == 1 && selectionY == 0 && puzzle3Solved == false) {
 				subPuzzleLock = true;
 				puzzle3Lock = true;
-				Debug.Log("Puzzle3");
+				
 				activeObj = GameObject.Find(puzzle3Nav[puzzleSelX3]);
 				pointerNav.transform.position = activeObj.transform.position;
 
 			} else if (selectionX == 1 && selectionY == 1 && puzzle4Solved == false) {
 				subPuzzleLock = true;
 				puzzle4Lock = true;
-				Debug.Log("Puzzle4");
+				
 				activeObj = GameObject.Find(puzzle4Nav[puzzleSelX4,puzzleSelY4]);
 				pointerNav.transform.position = activeObj.transform.position;
 			}
@@ -561,18 +556,11 @@ bool gameCompleted;
 		}
 
 		if(puzzle1Solved == true && puzzle2Solved == true && puzzle3Solved == true && puzzle4Solved == true){
-			GameObject finish1 = GameObject.Find("Cylinder015");
-			finish1.GetComponent<Renderer>().enabled = false;
-			GameObject finish2 = GameObject.Find("Cylinder017");
-			finish2.GetComponent<Renderer>().enabled = false;
-			GameObject finish3 = GameObject.Find("Cylinder018");
-			finish3.GetComponent<Renderer>().enabled = false;
-			GameObject finish4 = GameObject.Find("Cylinder019");
-			finish4.GetComponent<Renderer>().enabled = false;
+			GameObject finish = GameObject.Find("Cylinder015");
+			finish.GetComponent<Renderer>().enabled = false;
 			gameCompleted = true;
 		}
 		if(timeLeft > 0 && gameCompleted == false){
-		//Debug.Log("its tiem");
 		timeLeft -= Time.deltaTime;
 		minutes = Mathf.Floor(timeLeft / 60);
 		seconds = timeLeft % 60;
@@ -586,10 +574,22 @@ bool gameCompleted;
 		displayTimer.text = string.Format("{0:0}:{1:00}", minutes, seconds);
 		} 
 		else if(gameCompleted == true) {
-			Debug.Log("You win! You escaped with " + minutes + " minutes and " + seconds + " seconds left on the clock!");
+			gameWin = GameObject.Find("Game_Win");
+			gameWinC = gameWin.GetComponent<Canvas>();
+			gameWinC.enabled = true;
+			gameWinTxt1 = GameObject.Find("Txt_Win");
+			gameWinTxt2 = gameWinTxt1.GetComponent<Text>();
+			gameWinTxt2.text = "You escaped with " + minutes + " minutes and " + Mathf.Round(seconds) + " seconds left on the clock!";
+			
+			StartCoroutine(ChangeLevel());
+
 			
 		} else {
-			Debug.Log("You lose!");
+			gameLose = GameObject.Find("Game_Lose");
+			gameLoseC = gameLose.GetComponent<Canvas>();
+			gameLoseC.enabled = true;
+			StartCoroutine(ChangeLevel());
+			
 		}
 	}
 	
@@ -618,13 +618,19 @@ bool gameCompleted;
 		
 	}
 
+	IEnumerator ChangeLevel (){
+		yield return new WaitForSecondsRealtime(10);
+		float fadeTime = GameObject.Find("MenuController").GetComponent<SceneFade>().BeginFade(1);
+		yield return new WaitForSeconds(fadeTime);
+		SceneManager.LoadScene("MainMenu");
+	}
+
 	public void seedGenerator(int year){
 		//Challenge 1 input randomizer
 		
 		p1Ver = Random.Range(0,2);
 		p2Ver = wireColor[Random.Range(0,2)];
-		Debug.Log(p1Ver);
-		Debug.Log(p2Ver);
+		
 		p1Ver += 1;
 		puzzle1Initializer("puzzle1InputVer" + p1Ver);
 		wireCol(p2Ver, "Wire");
@@ -724,9 +730,9 @@ bool gameCompleted;
 
 	public void puzzle1Initializer (string padVer){
 		Renderer p1Rend = new Renderer();
-		Debug.Log(padVer);
+		
 		if(padVer == "puzzle1InputVer1"){
-			Debug.Log("Versjon 1");
+			
 			Shuffle(rnd, puzzle1InputVer1);
 			for(int i=0;i < puzzle1InputVer1.GetLength(0);i++){
 				for(int j=0;j < puzzle1InputVer1.GetLength(1);j++){
@@ -739,7 +745,7 @@ bool gameCompleted;
 			puzzle1Input = puzzle1InputVer1;			
 		} else {
 			//Do generator for other version
-			Debug.Log("Versjon 2");
+			
 			Shuffle(rnd, puzzle1InputVer2);
 			for(int i=0;i < puzzle1InputVer2.GetLength(0);i++){
 				for(int j=0;j < puzzle1InputVer2.GetLength(1);j++){
@@ -766,7 +772,7 @@ bool gameCompleted;
 			p3LightColorSet[j] = tmp2;
 			
 		}
-		Debug.Log(p3LightColorSet);
+
 		for(int i = 0; i < p3LightColors.Length; i++){
 			challengeComplete = GameObject.Find(p3Lights[i]);
 			Renderer rend = challengeComplete.GetComponent<Renderer>();
@@ -776,10 +782,9 @@ bool gameCompleted;
 		for(int i = 0; i < p3LightColorSet.Length; i++){
 			colorSetOutput = colorSetOutput + p3LightColorSet[i];
 		}
-		Debug.Log(colorSetOutput);
 		
 		puzzle3Solution = puzzle3Solutions[puzzle3SolIndex.IndexOf(colorSetOutput)];
-		Debug.Log("p3 solution = " + puzzle3Solution);
+
 	}
 
 	public void puzzle4Screen (){

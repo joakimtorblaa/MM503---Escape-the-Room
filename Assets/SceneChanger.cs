@@ -8,11 +8,14 @@ public class SceneChanger : MonoBehaviour {
 	public void StartGame(){
 		StartCoroutine(ChangeLevel());
 	}
+
+	public void QuitGame(){
+		Application.Quit();
+	}
 	
 	IEnumerator ChangeLevel (){
 		float fadeTime = GameObject.Find("MenuController").GetComponent<SceneFade>().BeginFade(1);
 		yield return new WaitForSeconds(fadeTime);
-		Debug.Log("Test");
 		SceneManager.LoadScene("EscapeTheRoom");
 	}
 }
