@@ -2,8 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class SceneChanger : MonoBehaviour {
+
+	private GameObject storeSelected;
+
+	void Update (){
+			if(EventSystem.current.currentSelectedGameObject == null){
+				EventSystem.current.SetSelectedGameObject(storeSelected);
+			}
+			if(Cursor.visible == false){
+				Cursor.visible = true;
+			}
+	}
+
+	void LateUpdate (){
+		storeSelected = EventSystem.current.currentSelectedGameObject;
+	}
 
 	public void StartGame(){
 		StartCoroutine(ChangeLevel());

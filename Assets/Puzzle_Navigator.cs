@@ -28,7 +28,7 @@ string[,] mainPuzzles = new string[,]{
 
 int[] yearOptions = new int[]{1954, 1784, 1892};
 
-float timeLeft = 300.0f;
+float timeLeft = 20.0f;
 float minutes;
 float seconds;
 //Numberpad display
@@ -163,6 +163,8 @@ Canvas gameWinC, gameLoseC;
     void Start(){
 		gameCompleted = false;
 		
+		Cursor.visible = false;
+
 		puzzle4TmpVal = "";
 		pointerNav = GameObject.Find("Capsule");
 		pBarP4 = GameObject.Find("ProgressSprite");
