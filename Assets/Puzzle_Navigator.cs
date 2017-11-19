@@ -8,7 +8,7 @@ public class Puzzle_Navigator : MonoBehaviour {
 
 
 
-public GameObject pointerNav, activeObj, numKeys, pBarP4, pScreenP4, challengeComplete, wireC;
+public GameObject  activeObj, numKeys, pBarP4, pScreenP4, challengeComplete, wireC;
 
 
 public Random rnd = new Random();
@@ -26,9 +26,12 @@ string[,] mainPuzzles = new string[,]{
 	{("Box019"),("Box018")},
 };
 
+Shader startSh, outlineSh;
+Renderer matRend;
+
 int[] yearOptions = new int[]{1954, 1784, 1892};
 
-float timeLeft = 20.0f;
+float timeLeft = 300.0f;
 float minutes;
 float seconds;
 //Numberpad display
@@ -165,8 +168,10 @@ Canvas gameWinC, gameLoseC;
 		
 		Cursor.visible = false;
 
+		startSh = Shader.Find("Standard");
+		outlineSh = Shader.Find("Outlined/Custom");
+
 		puzzle4TmpVal = "";
-		pointerNav = GameObject.Find("Capsule");
 		pBarP4 = GameObject.Find("ProgressSprite");
 		pScreenP4 = GameObject.Find("Puzzle4Screen");
 		
@@ -218,7 +223,10 @@ Canvas gameWinC, gameLoseC;
 		puzzle4Solved = false;
 
 		activeObj = GameObject.Find(mainPuzzles[selectionX, selectionY]);
-		pointerNav.transform.position = activeObj.transform.position;
+		
+		matRend = activeObj.GetComponent<Renderer>();
+		matRend.material.shader = outlineSh;
+		
 	}
 
 	void Update(){
@@ -292,42 +300,71 @@ Canvas gameWinC, gameLoseC;
 		
 
 		if(subPuzzleLock == false){
-			//stop outofrangeY (not errormessage)
+			
 			selectionY = (selectionY >= 2) ? 1 : (selectionY < 0) ? 0: selectionY;
 
-			//stop outofrangeX (not errormessage)
+			
 			selectionX = (selectionX >= 2) ? 1 : (selectionX < 0) ? 0: selectionX;
 
 			if(vertical != 0){
 				selectionY += vertical;
 
+				if(selectionY != -1 && selectionY != 2){
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
+				
+
 				activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
-				pointerNav.transform.position = activeObj.transform.position;
-					
+
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
+				}
+				
+				
 			} else if(horisontal != 0){
 				selectionX += horisontal;
 
+				if(selectionX != -1 && selectionX != 2){
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
+				
 				activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
-				pointerNav.transform.position = activeObj.transform.position;
+
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
+				}
+				
 			}
 
 		} else if (subPuzzleLock == true && puzzle1Lock == true){
-			//stop outofrangeY (not errormessage)
+			
 			puzzleSelY1 = (puzzleSelY1 >= 3) ? 2 : (puzzleSelY1 < 0) ? 0: puzzleSelY1;
 
-			//stop outofrangeX (not errormessage)
+			
 			puzzleSelX1 = (puzzleSelX1 >= 3) ? 2 : (puzzleSelX1 < 0) ? 0: puzzleSelX1;
 			if(vertical != 0){
 				puzzleSelY1 += vertical;
-
+				if(puzzleSelY1 != -1 && puzzleSelY1 != 3){
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
+				
 				activeObj = GameObject.Find(puzzle1Nav[puzzleSelX1,puzzleSelY1]);
-				pointerNav.transform.position = activeObj.transform.position;
-					
+				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
+				}
 			} else if(horisontal != 0){
 				puzzleSelX1 += horisontal;
 
+				if(puzzleSelX1 != -1 && puzzleSelX1 != 3){
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
+				
 				activeObj = GameObject.Find(puzzle1Nav[puzzleSelX1,puzzleSelY1]);
-				pointerNav.transform.position = activeObj.transform.position;
+				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
+				}
 			}
 
 			if(Input.GetButtonDown("Submit") && puzzle1Resetting == false){
@@ -344,8 +381,14 @@ Canvas gameWinC, gameLoseC;
 						puzzle1Solved = true;
 						subPuzzleLock = false;
 						puzzle1Lock = false;
+
+						matRend = activeObj.GetComponent<Renderer>();
+						matRend.material.shader = startSh;
+						
 						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
-						pointerNav.transform.position = activeObj.transform.position;
+						
+						matRend = activeObj.GetComponent<Renderer>();
+						matRend.material.shader = outlineSh;
 
 						if(puzzle2Lock == false || puzzle3Lock == false || puzzle4Lock == false){
 							timeLeft = timeLeft + 30;
@@ -366,8 +409,16 @@ Canvas gameWinC, gameLoseC;
 			puzzleSelX2 = (puzzleSelX2 >= 6) ? 5 : (puzzleSelX2 < 0) ? 0: puzzleSelX2;
 			if(horisontal != 0){
 				puzzleSelX2 += horisontal;
+
+				if(puzzleSelX2 != -1 && puzzleSelX2 != 6){
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
+
 				activeObj = GameObject.Find(puzzle2Nav[puzzleSelX2]);
-				pointerNav.transform.position = activeObj.transform.position;
+
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
+				}
 			}
 			if(Input.GetButtonDown("Submit") && puzzle2Nav.IndexOf(puzzle2Nav[puzzleSelX2]) != 5){
 				
@@ -408,8 +459,14 @@ Canvas gameWinC, gameLoseC;
 					puzzle2Solved = true;
 					subPuzzleLock = false;
 					puzzle2Lock = false;
+
+					matRend = activeObj.GetComponent<Renderer>();
+					matRend.material.shader = startSh;
+
 					activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
-					pointerNav.transform.position = activeObj.transform.position;
+					
+					matRend = activeObj.GetComponent<Renderer>();
+					matRend.material.shader = outlineSh;
 
 					if(puzzle1Lock == false || puzzle3Lock == false || puzzle4Lock == false){
 							timeLeft = timeLeft + 30;
@@ -423,8 +480,16 @@ Canvas gameWinC, gameLoseC;
 			puzzleSelX3 = (puzzleSelX3 >= 5) ? 4 : (puzzleSelX3 < 0) ? 0: puzzleSelX3;
 			if(horisontal != 0 && leverAnimation == false){
 				puzzleSelX3 += horisontal;
+
+				if(puzzleSelX3 != -1 && puzzleSelX3 != 5){
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
+
 				activeObj = GameObject.Find(puzzle3Nav[puzzleSelX3]);
-				pointerNav.transform.position = activeObj.transform.position;
+				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
+				}
 			}
 			if(Input.GetButtonDown("Submit") && puzzle3Nav.IndexOf(puzzle3Nav[puzzleSelX3]) != 4){
 				activeObj.transform.Rotate(Vector3.back, 40);
@@ -448,8 +513,14 @@ Canvas gameWinC, gameLoseC;
 						puzzle3Solved = true;
 						subPuzzleLock = false;
 						puzzle3Lock = false;
+
+						matRend = activeObj.GetComponent<Renderer>();
+						matRend.material.shader = startSh;
+
 						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
-						pointerNav.transform.position = activeObj.transform.position;
+						
+						matRend = activeObj.GetComponent<Renderer>();
+						matRend.material.shader = outlineSh;
 
 						if(puzzle1Lock == false || puzzle2Lock == false || puzzle4Lock == false){
 							timeLeft = timeLeft + 30;
@@ -469,14 +540,27 @@ Canvas gameWinC, gameLoseC;
 			if(vertical != 0){
 				puzzleSelY4 += vertical;
 				
+				if(puzzleSelY4 != -1 && puzzleSelY4 != 2){
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;	
+
 				activeObj = GameObject.Find(puzzle4Nav[puzzleSelX4,puzzleSelY4]);
-				pointerNav.transform.position = activeObj.transform.position;
-					
+				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
+				}
 			} else if(horisontal != 0){
 				puzzleSelX4 += horisontal;
 				
+				if(puzzleSelX4 != -1 && puzzleSelX4 != 2){
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
+
 				activeObj = GameObject.Find(puzzle4Nav[puzzleSelX4,puzzleSelY4]);
-				pointerNav.transform.position = activeObj.transform.position;
+				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
+				}
 			}
 
 			if(Input.GetButtonDown("Submit")){
@@ -499,8 +583,14 @@ Canvas gameWinC, gameLoseC;
 						puzzle4Solved = true;
 						subPuzzleLock = false;
 						puzzle4Lock = false;
+
+						matRend = activeObj.GetComponent<Renderer>();
+						matRend.material.shader = startSh;
+
 						activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
-						pointerNav.transform.position = activeObj.transform.position;
+						
+						matRend = activeObj.GetComponent<Renderer>();
+						matRend.material.shader = outlineSh;
 						
 						if(puzzle1Lock == false || puzzle2Lock == false || puzzle3Lock == false){
 							timeLeft = timeLeft + 30;
@@ -524,27 +614,50 @@ Canvas gameWinC, gameLoseC;
 			if(selectionX == 0 && selectionY == 0 && puzzle1Solved == false){
 				subPuzzleLock = true;
 				puzzle1Lock = true;
+
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
+
 				activeObj = GameObject.Find(puzzle1Nav[puzzleSelX1,puzzleSelY1]);
-				pointerNav.transform.position = activeObj.transform.position;
+				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
+
 			} else if (selectionX == 0 && selectionY == 1 && puzzle2Solved == false) {
 				subPuzzleLock = true;
 				puzzle2Lock = true;
 				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
+
 				activeObj = GameObject.Find(puzzle2Nav[puzzleSelX2]);
-				pointerNav.transform.position = activeObj.transform.position;
+				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
+
 			} else if (selectionX == 1 && selectionY == 0 && puzzle3Solved == false) {
 				subPuzzleLock = true;
 				puzzle3Lock = true;
 				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
+
 				activeObj = GameObject.Find(puzzle3Nav[puzzleSelX3]);
-				pointerNav.transform.position = activeObj.transform.position;
+				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
 
 			} else if (selectionX == 1 && selectionY == 1 && puzzle4Solved == false) {
 				subPuzzleLock = true;
 				puzzle4Lock = true;
+
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = startSh;
 				
 				activeObj = GameObject.Find(puzzle4Nav[puzzleSelX4,puzzleSelY4]);
-				pointerNav.transform.position = activeObj.transform.position;
+				
+				matRend = activeObj.GetComponent<Renderer>();
+				matRend.material.shader = outlineSh;
 			}
 		}
 		if(Input.GetButtonDown("Cancel") && subPuzzleLock == true){
@@ -553,8 +666,15 @@ Canvas gameWinC, gameLoseC;
 			puzzle2Lock = false;
 			puzzle3Lock = false;
 			puzzle4Lock = false;
+
+			matRend = activeObj.GetComponent<Renderer>();
+			matRend.material.shader = startSh;
+
 			activeObj = GameObject.Find(mainPuzzles[selectionX,selectionY]);
-			pointerNav.transform.position = activeObj.transform.position;
+			
+			matRend = activeObj.GetComponent<Renderer>();
+			matRend.material.shader = outlineSh;
+
 		}
 
 		if(puzzle1Solved == true && puzzle2Solved == true && puzzle3Solved == true && puzzle4Solved == true){
